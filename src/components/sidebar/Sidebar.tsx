@@ -6,7 +6,7 @@ type TSidebarProps = {
 export const Sidebar = ({ currentPhase = 'React', currentMode = 'Quiz' }: TSidebarProps) => {
   const phases = [
     { name: 'JS core', progress: '20/20', color: 'bg-purple-500', active: false },
-    { name: 'React', progress: '3/40', color: 'bg-emerald-500', active: currentPhase === 'React' },
+    { name: 'React', progress: '40/40', color: 'bg-emerald-500', active: currentPhase === 'React' },
     { name: 'TypeScript', progress: '0/24', color: 'bg-amber-500', active: false },
     { name: 'Patterns', progress: '0/16', color: 'bg-red-500', active: false },
     { name: 'HTML/CSS & SQL', progress: '0/12', color: 'bg-blue-500', active: false }
