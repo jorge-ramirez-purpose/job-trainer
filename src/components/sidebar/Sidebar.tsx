@@ -9,7 +9,7 @@ export const Sidebar = ({ currentPhase = 'React', currentMode = 'Quiz' }: TSideb
     { name: 'React', progress: '40/40', color: 'bg-emerald-500', active: currentPhase === 'React' },
     { name: 'TypeScript', progress: '24/24', color: 'bg-amber-500', active: false },
     { name: 'Patterns', progress: '16/16', color: 'bg-red-500', active: false },
-    { name: 'HTML/CSS & SQL', progress: '0/12', color: 'bg-blue-500', active: false }
+    { name: 'HTML/CSS & SQL', progress: '12/12', color: 'bg-blue-500', active: false }
   ]
 
   const modes = [
