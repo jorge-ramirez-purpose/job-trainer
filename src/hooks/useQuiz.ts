@@ -22,15 +22,18 @@ const saveProgress = (progress: TPersistedProgress) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress))
 }
 
-export const useQuiz = () => {
+export const useQuiz = (
+  category: string | null,
+  questionIndex: number,
+  onQuestionChange: (newIndex: number) => void
+) => {
   const [questions, setQuestions] = useState<TQuestion[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [category, setCategory] = useState<string | null>(null)
 
   const persisted = loadProgress()
   const [quizState, setQuizState] = useState<TQuizState>({
-    currentQuestion: 0,
+    currentQuestion: questionIndex,
     answers: persisted.answers,
     markedForReview: persisted.markedForReview,
     showExplanation: false,
@@ -45,6 +48,17 @@ export const useQuiz = () => {
     })
   }, [quizState.answers, quizState.markedForReview])
 
+  // Sync question index from URL
+  useEffect(() => {
+    setQuizState(prev => ({
+      ...prev,
+      currentQuestion: questionIndex,
+      showExplanation: false,
+      selectedAnswer: null
+    }))
+  }, [questionIndex])
+
+  // Fetch questions when category changes
   useEffect(() => {
     const controller = new AbortController()
     setLoading(true)
@@ -61,13 +75,6 @@ export const useQuiz = () => {
       })
       .then(data => {
         setQuestions(data)
-        setQuizState(prev => ({
-          ...prev,
-          currentQuestion: 0,
-          showExplanation: false,
-          selectedAnswer: null,
-          showXRay: false
-        }))
         setLoading(false)
       })
       .catch(err => {
@@ -96,18 +103,10 @@ export const useQuiz = () => {
   }, [questions])
 
   const nextQuestion = useCallback(() => {
-    setQuizState(prev => {
-      const hasMoreQuestions = prev.currentQuestion < questions.length - 1
-      if (!hasMoreQuestions) return prev
-      return {
-        ...prev,
-        currentQuestion: prev.currentQuestion + 1,
-        showExplanation: false,
-        selectedAnswer: null,
-        showXRay: false
-      }
-    })
-  }, [questions.length])
+    const nextIndex = quizState.currentQuestion + 1
+    const hasMore = nextIndex < questions.length
+    if (hasMore) onQuestionChange(nextIndex)
+  }, [quizState.currentQuestion, questions.length, onQuestionChange])
 
   const toggleMarkForReview = useCallback(() => {
     setQuizState(prev => {
@@ -123,10 +122,6 @@ export const useQuiz = () => {
 
   const toggleXRay = useCallback(() => {
     setQuizState(prev => ({ ...prev, showXRay: !prev.showXRay }))
-  }, [])
-
-  const selectCategory = useCallback((cat: string | null) => {
-    setCategory(cat)
   }, [])
 
   const stats = useMemo(() => {
@@ -154,8 +149,6 @@ export const useQuiz = () => {
     stats,
     totalQuestions: questions.length,
     loading,
-    error,
-    category,
-    selectCategory
+    error
   }
 }
