@@ -1,4 +1,5 @@
 import { Question } from '../../types/Question'
+import { CodeBlock } from '../common/CodeBlock'
 
 interface QuestionCardProps {
   question: Question
@@ -44,9 +45,7 @@ export const QuestionCard = ({
       </div>
       
       {question.code && (
-        <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md p-3 mb-3 font-mono text-xs text-gray-900 dark:text-gray-100 leading-relaxed whitespace-pre-wrap">
-          {question.code}
-        </div>
+        <CodeBlock code={question.code} language="javascript" />
       )}
 
       <div className="grid grid-cols-2 gap-2 mb-3">
