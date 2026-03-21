@@ -105,14 +105,17 @@ export const useQuiz = (
   }, [])
 
   const stats = useMemo(() => {
-    const correct = Object.entries(quizState.answers).filter(
-      ([questionId, answer]) => {
-        const question = questions.find(q => q.id === questionId)
-        return question && answer === question.correctAnswer
-      }
-    ).length
+    const questionIds = new Set(questions.map(q => q.id))
+    const relevantAnswers = Object.entries(quizState.answers).filter(
+      ([questionId]) => questionIds.has(questionId)
+    )
 
-    const wrong = Object.keys(quizState.answers).length - correct
+    const correct = relevantAnswers.filter(([questionId, answer]) => {
+      const question = questions.find(q => q.id === questionId)
+      return question && answer === question.correctAnswer
+    }).length
+
+    const wrong = relevantAnswers.length - correct
     const hasAnswered = correct + wrong > 0
     const score = hasAnswered ? Math.round((correct / (correct + wrong)) * 100) : 0
 
