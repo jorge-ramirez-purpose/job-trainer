@@ -1,3 +1,4 @@
+import { useMemo, useCallback } from 'react'
 import { useParams, useNavigate, Navigate } from 'react-router-dom'
 import { useQuiz } from '../hooks/useQuiz'
 import { slugToCategory, PHASE_TITLES } from '../constants/phases'
@@ -17,7 +18,20 @@ export const QuizPage = () => {
     navigate(`/quiz/${phaseSlug}/${newIndex + 1}`, { replace: true })
   }
 
-  const { quizState, currentQuestion, selectAnswer, prevQuestion, nextQuestion, toggleMarkForReview, toggleXRay, stats, totalQuestions, loading, error } = useQuiz(category, questionIndex, onQuestionChange)
+  const { quizState, questions, currentQuestion, selectAnswer, prevQuestion, nextQuestion, toggleMarkForReview, toggleXRay, stats, totalQuestions, loading, error } = useQuiz(category, questionIndex, onQuestionChange)
+
+  const tags = useMemo(() => [...new Set(questions.map(q => q.tag))], [questions])
+
+  const firstIndexByTag = useMemo(() => {
+    const map: Record<string, number> = {}
+    questions.forEach((q, i) => { if (!(q.tag in map)) map[q.tag] = i })
+    return map
+  }, [questions])
+
+  const handleTagSelect = useCallback((tag: string) => {
+    const idx = firstIndexByTag[tag]
+    if (idx !== undefined) onQuestionChange(idx)
+  }, [firstIndexByTag, onQuestionChange])
 
   if (!isValidSlug) {
     return <Navigate to="/quiz/all/1" replace />
@@ -56,6 +70,8 @@ export const QuizPage = () => {
         tag={currentQuestion.tag}
         currentQuestion={quizState.currentQuestion}
         totalQuestions={totalQuestions}
+        tags={tags}
+        onTagSelect={handleTagSelect}
       />
 
       <div className="flex-1 p-4 overflow-y-auto w-full max-w-[900px] mx-auto">
