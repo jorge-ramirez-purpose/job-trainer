@@ -129,6 +129,7 @@ export const useQuiz = (
 
   return {
     quizState,
+    questions,
     currentQuestion,
     selectAnswer,
     prevQuestion,
