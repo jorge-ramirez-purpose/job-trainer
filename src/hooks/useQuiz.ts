@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { TQuestion, TQuizState } from '../types/Question'
 
 export const useQuiz = () => {
   const [questions, setQuestions] = useState<TQuestion[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [category, setCategory] = useState<string | null>(null)
   const [quizState, setQuizState] = useState<TQuizState>({
     currentQuestion: 0,
     answers: {},
@@ -15,14 +16,27 @@ export const useQuiz = () => {
 
   useEffect(() => {
     const controller = new AbortController()
+    setLoading(true)
+    setError(null)
 
-    fetch('/api/questions', { signal: controller.signal })
+    const url = category
+      ? `/api/questions?category=${encodeURIComponent(category)}`
+      : '/api/questions'
+
+    fetch(url, { signal: controller.signal })
       .then(res => {
         if (!res.ok) throw new Error(`Failed to fetch questions: ${res.status}`)
         return res.json()
       })
       .then(data => {
         setQuestions(data)
+        setQuizState(prev => ({
+          ...prev,
+          currentQuestion: 0,
+          showExplanation: false,
+          selectedAnswer: null,
+          showXRay: false
+        }))
         setLoading(false)
       })
       .catch(err => {
@@ -32,7 +46,7 @@ export const useQuiz = () => {
       })
 
     return () => controller.abort()
-  }, [])
+  }, [category])
 
   const currentQuestion = questions[quizState.currentQuestion]
 
@@ -69,6 +83,10 @@ export const useQuiz = () => {
     }))
   }
 
+  const selectCategory = useCallback((cat: string | null) => {
+    setCategory(cat)
+  }, [])
+
   const getStats = () => {
     const correct = Object.entries(quizState.answers).filter(
       ([questionId, answer]) => {
@@ -92,6 +110,8 @@ export const useQuiz = () => {
     getStats,
     totalQuestions: questions.length,
     loading,
-    error
+    error,
+    category,
+    selectCategory
   }
 }

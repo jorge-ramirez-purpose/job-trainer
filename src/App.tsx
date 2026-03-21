@@ -4,6 +4,14 @@ import { TopBar } from './components/quiz/TopBar'
 import { StatsRow } from './components/quiz/StatsRow'
 import { QuestionCard } from './components/quiz/QuestionCard'
 
+const PHASE_TITLES: Record<string, string> = {
+  'JavaScript': 'JS core mechanics',
+  'React': 'React core mechanics',
+  'TypeScript': 'TypeScript deep dive',
+  'Patterns': 'Design patterns',
+  'HTML/CSS & SQL': 'HTML, CSS & SQL fundamentals'
+}
+
 const App = () => {
   const {
     quizState,
@@ -14,42 +22,54 @@ const App = () => {
     getStats,
     totalQuestions,
     loading,
-    error
+    error,
+    category,
+    selectCategory
   } = useQuiz()
 
   const stats = getStats()
+  const title = category ? PHASE_TITLES[category] ?? category : 'All phases'
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <p className="text-gray-500 dark:text-gray-400">Loading questions...</p>
+      <div className="flex h-screen text-sm bg-gray-50 dark:bg-gray-900">
+        <Sidebar currentPhase={category} currentMode="Quiz" onPhaseSelect={selectCategory} />
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-gray-500 dark:text-gray-400">Loading questions...</p>
+        </div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <p className="text-red-500">Error: {error}</p>
+      <div className="flex h-screen text-sm bg-gray-50 dark:bg-gray-900">
+        <Sidebar currentPhase={category} currentMode="Quiz" onPhaseSelect={selectCategory} />
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-red-500">Error: {error}</p>
+        </div>
       </div>
     )
   }
 
   if (!currentQuestion) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <p className="text-gray-500 dark:text-gray-400">No questions available.</p>
+      <div className="flex h-screen text-sm bg-gray-50 dark:bg-gray-900">
+        <Sidebar currentPhase={category} currentMode="Quiz" onPhaseSelect={selectCategory} />
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-gray-500 dark:text-gray-400">No questions available.</p>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="flex h-screen text-sm bg-gray-50 dark:bg-gray-900">
-      <Sidebar currentPhase="React" currentMode="Quiz" />
+      <Sidebar currentPhase={category} currentMode="Quiz" onPhaseSelect={selectCategory} />
 
       <div className="flex-1 flex flex-col">
         <TopBar
-          title="React core mechanics"
+          title={title}
           tag={currentQuestion.tag}
           currentQuestion={quizState.currentQuestion}
           totalQuestions={totalQuestions}
