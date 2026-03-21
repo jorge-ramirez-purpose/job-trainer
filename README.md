@@ -4,13 +4,13 @@ A React + TypeScript + Vite quiz app for frontend interview preparation, backed 
 
 ## Features
 
-- **Quiz Mode**: 112 interactive questions with predict-output and multiple-choice formats
+- **Quiz Mode**: 128 interactive questions with predict-output and multiple-choice formats
 - **Phase Navigation**: Filter questions by topic area from the sidebar
 - **X-Ray Mode**: Peek at the correct answer before committing
 - **Syntax Highlighting**: Code snippets rendered with PrismJS
 - **Progress Tracking**: Correct/wrong/score stats per session
 
-## Topics Covered (112 questions)
+## Topics Covered (128 questions)
 
 | Phase | Questions | Topics |
 |-------|-----------|--------|
@@ -19,6 +19,7 @@ A React + TypeScript + Vite quiz app for frontend interview preparation, backed 
 | TypeScript | 24 | generics, utility types, narrowing, discriminated unions, type guards, mapped types, conditional types |
 | Patterns | 16 | debounce/throttle, observer, pub/sub, module, factory, singleton, strategy |
 | HTML/CSS & SQL | 12 | specificity, flexbox, grid, positioning, joins, indexing, normalization |
+| Node.js & Express | 16 | middleware, routing, error handling, req/res lifecycle, async patterns, REST design, environment & config, security basics |
 
 ## Getting Started
 
@@ -45,7 +46,7 @@ src/
 server/
   index.ts          # Express entry point (port 3001)
   routes/           # API route handlers
-  data/             # questions.json (112 questions)
+  data/             # questions.json (128 questions)
 shared/
   types.ts          # TQuestion, TQuizState (used by both sides)
 ```
