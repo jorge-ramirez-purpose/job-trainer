@@ -3,14 +3,7 @@ import { Sidebar } from './components/sidebar/Sidebar'
 import { TopBar } from './components/quiz/TopBar'
 import { StatsRow } from './components/quiz/StatsRow'
 import { QuestionCard } from './components/quiz/QuestionCard'
-
-const PHASE_TITLES: Record<string, string> = {
-  'JavaScript': 'JS core mechanics',
-  'React': 'React core mechanics',
-  'TypeScript': 'TypeScript deep dive',
-  'Patterns': 'Design patterns',
-  'HTML/CSS & SQL': 'HTML, CSS & SQL fundamentals'
-}
+import { PHASE_TITLES } from './constants/phases'
 
 const App = () => {
   const {
