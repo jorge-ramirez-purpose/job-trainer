@@ -96,7 +96,10 @@ export const QuestionCard = ({
           Mark for review
         </button>
         <div className="flex-1"></div>
-        <button className="text-xs px-3.5 py-1.5 rounded-md border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 transition-colors">
+        <button
+          onClick={onNext}
+          className="text-xs px-3.5 py-1.5 rounded-md border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 transition-colors"
+        >
           Skip
         </button>
         {showExplanation && (
