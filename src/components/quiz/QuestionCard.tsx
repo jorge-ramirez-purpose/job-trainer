@@ -1,6 +1,14 @@
 import { TQuestion } from '../../types/Question'
 import { CodeBlock } from '../common/CodeBlock'
 
+const OPTION_STYLES = {
+  correct: 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200',
+  wrong: 'border-red-600 bg-red-50 text-red-800 dark:bg-red-900/50 dark:text-red-200',
+  selected: 'border-indigo-500 bg-indigo-50 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-200 dark:border-indigo-400',
+  default: 'border-gray-300 bg-white text-gray-600 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300',
+  idle: 'border-gray-300 bg-white text-gray-600 hover:border-gray-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:border-gray-500',
+} as const
+
 type TProps = {
   question: TQuestion
   selectedAnswer: number | null
@@ -23,28 +31,12 @@ export const QuestionCard = ({
   const getOptionStyle = (index: number) => {
     const isCorrectAnswer = index === question.correctAnswer
     const isSelected = selectedAnswer === index
-    const isXRayReveal = showXRay && !showExplanation && isCorrectAnswer
-    const isWrongSelection = isSelected && !isCorrectAnswer
 
-    if (isXRayReveal) {
-      return 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200'
-    }
-
-    if (!showExplanation) {
-      return isSelected
-        ? 'border-indigo-500 bg-indigo-50 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-200 dark:border-indigo-400'
-        : 'border-gray-300 bg-white text-gray-600 hover:border-gray-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:border-gray-500'
-    }
-
-    if (isCorrectAnswer) {
-      return 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200'
-    }
-
-    if (isWrongSelection) {
-      return 'border-red-600 bg-red-50 text-red-800 dark:bg-red-900/50 dark:text-red-200'
-    }
-
-    return 'border-gray-300 bg-white text-gray-600 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300'
+    if (showXRay && !showExplanation && isCorrectAnswer) return OPTION_STYLES.correct
+    if (!showExplanation) return isSelected ? OPTION_STYLES.selected : OPTION_STYLES.idle
+    if (isCorrectAnswer) return OPTION_STYLES.correct
+    if (isSelected) return OPTION_STYLES.wrong
+    return OPTION_STYLES.default
   }
 
   const isPredictOutput = question.type === 'predict-output'
@@ -71,11 +63,11 @@ export const QuestionCard = ({
           </button>
         )}
       </div>
-      
+
       <div className="text-sm text-gray-900 dark:text-gray-100 leading-relaxed mb-3">
         {question.question}
       </div>
-      
+
       {hasCode && (
         <CodeBlock code={question.code!} language="javascript" />
       )}
@@ -108,7 +100,7 @@ export const QuestionCard = ({
           Skip
         </button>
         {showExplanation && (
-          <button 
+          <button
             onClick={onNext}
             className="text-xs px-3.5 py-1.5 rounded-md bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200 transition-colors"
           >
