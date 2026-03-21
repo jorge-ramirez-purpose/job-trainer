@@ -14,7 +14,9 @@ export const useQuiz = () => {
   })
 
   useEffect(() => {
-    fetch('/api/questions')
+    const controller = new AbortController()
+
+    fetch('/api/questions', { signal: controller.signal })
       .then(res => {
         if (!res.ok) throw new Error(`Failed to fetch questions: ${res.status}`)
         return res.json()
@@ -24,9 +26,12 @@ export const useQuiz = () => {
         setLoading(false)
       })
       .catch(err => {
+        if (err.name === 'AbortError') return
         setError(err.message)
         setLoading(false)
       })
+
+    return () => controller.abort()
   }, [])
 
   const currentQuestion = questions[quizState.currentQuestion]
