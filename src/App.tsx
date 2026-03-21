@@ -11,6 +11,7 @@ const App = () => {
     currentQuestion,
     selectAnswer,
     nextQuestion,
+    toggleMarkForReview,
     toggleXRay,
     getStats,
     totalQuestions,
@@ -80,9 +81,11 @@ const App = () => {
             selectedAnswer={quizState.selectedAnswer}
             showExplanation={quizState.showExplanation}
             showXRay={quizState.showXRay}
+            isMarkedForReview={quizState.markedForReview.has(currentQuestion.id)}
             onAnswerSelect={selectAnswer}
             onNext={nextQuestion}
             onToggleXRay={toggleXRay}
+            onToggleMarkForReview={toggleMarkForReview}
           />
         </div>
       </div>

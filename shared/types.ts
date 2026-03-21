@@ -13,6 +13,7 @@ export type TQuestion = {
 export type TQuizState = {
   currentQuestion: number;
   answers: Record<string, number>;
+  markedForReview: Set<string>;
   showExplanation: boolean;
   selectedAnswer: number | null;
   showXRay: boolean;

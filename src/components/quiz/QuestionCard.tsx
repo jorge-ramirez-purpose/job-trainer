@@ -14,9 +14,11 @@ type TProps = {
   selectedAnswer: number | null
   showExplanation: boolean
   showXRay: boolean
+  isMarkedForReview: boolean
   onAnswerSelect: (index: number) => void
   onNext: () => void
   onToggleXRay: () => void
+  onToggleMarkForReview: () => void
 }
 
 export const QuestionCard = ({
@@ -24,9 +26,11 @@ export const QuestionCard = ({
   selectedAnswer,
   showExplanation,
   showXRay,
+  isMarkedForReview,
   onAnswerSelect,
   onNext,
-  onToggleXRay
+  onToggleXRay,
+  onToggleMarkForReview
 }: TProps) => {
   const getOptionStyle = (index: number) => {
     const isCorrectAnswer = index === question.correctAnswer
@@ -92,8 +96,15 @@ export const QuestionCard = ({
       )}
 
       <div className="flex items-center gap-2">
-        <button className="text-xs px-3.5 py-1.5 rounded-md border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 transition-colors">
-          Mark for review
+        <button
+          onClick={onToggleMarkForReview}
+          className={`text-xs px-3.5 py-1.5 rounded-md border transition-colors ${
+            isMarkedForReview
+              ? 'border-amber-500 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-900/50 dark:border-amber-400 dark:text-amber-300'
+              : 'border-gray-300 bg-white text-gray-900 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700'
+          }`}
+        >
+          {isMarkedForReview ? 'Marked for review' : 'Mark for review'}
         </button>
         <div className="flex-1"></div>
         <button
