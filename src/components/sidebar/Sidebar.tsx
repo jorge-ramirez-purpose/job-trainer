@@ -1,3 +1,4 @@
+import { useNavigate, useLocation } from 'react-router-dom'
 import { PHASES } from '../../constants/phases'
 
 type TProps = {
@@ -6,6 +7,13 @@ type TProps = {
 }
 
 export const Sidebar = ({ currentPhase, onPhaseSelect }: TProps) => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const isReviewActive = location.pathname.startsWith('/review')
+  const isMarkedActive = location.pathname.startsWith('/marked')
+  const isQuizActive = !isReviewActive && !isMarkedActive
+
   return (
     <div className="w-52 border-r border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 flex-shrink-0 py-3.5">
       <div className="px-3.5 pb-3 text-sm font-medium text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700 mb-2">
@@ -15,14 +23,14 @@ export const Sidebar = ({ currentPhase, onPhaseSelect }: TProps) => {
         </div>
       </div>
 
-      <div className="px-2">
+      <div className="px-2 mb-4">
         <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider px-1.5 mb-1">
           Phases
         </div>
         <div
           onClick={() => onPhaseSelect(null)}
           className={`flex items-center gap-2 px-1.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors ${
-            currentPhase === null
+            isQuizActive && currentPhase === null
               ? 'bg-gray-100 text-gray-900 font-medium dark:bg-gray-700 dark:text-gray-100'
               : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100'
           }`}
@@ -36,7 +44,7 @@ export const Sidebar = ({ currentPhase, onPhaseSelect }: TProps) => {
             key={phase.name}
             onClick={() => onPhaseSelect(phase.category)}
             className={`flex items-center gap-2 px-1.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors ${
-              currentPhase === phase.category
+              isQuizActive && currentPhase === phase.category
                 ? 'bg-gray-100 text-gray-900 font-medium dark:bg-gray-700 dark:text-gray-100'
                 : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100'
             }`}
@@ -48,6 +56,34 @@ export const Sidebar = ({ currentPhase, onPhaseSelect }: TProps) => {
             </span>
           </div>
         ))}
+      </div>
+
+      <div className="px-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider px-1.5 mb-1">
+          Review
+        </div>
+        <div
+          onClick={() => navigate('/review/1')}
+          className={`flex items-center gap-2 px-1.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors ${
+            isReviewActive
+              ? 'bg-gray-100 text-gray-900 font-medium dark:bg-gray-700 dark:text-gray-100'
+              : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100'
+          }`}
+        >
+          <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
+          Wrong answers
+        </div>
+        <div
+          onClick={() => navigate('/marked/1')}
+          className={`flex items-center gap-2 px-1.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors ${
+            isMarkedActive
+              ? 'bg-gray-100 text-gray-900 font-medium dark:bg-gray-700 dark:text-gray-100'
+              : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100'
+          }`}
+        >
+          <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          Marked for review
+        </div>
       </div>
     </div>
   )
