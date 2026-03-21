@@ -40,7 +40,7 @@ export const QuestionCard = ({
   }
 
   const isPredictOutput = question.type === 'predict-output'
-  const canShowXRayToggle = isPredictOutput && !showExplanation
+  const canShowXRayToggle = !showExplanation
   const shouldShowExplanation = showExplanation || showXRay
   const hasCode = Boolean(question.code)
 
