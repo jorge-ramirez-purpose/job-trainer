@@ -1576,5 +1576,190 @@
     ],
     "correctAnswer": 0,
     "explanation": "'hi' is not empty so required passes. But 'hi'.length is 2, which is less than 3, so minLength fails. every() short-circuits on the first false, returning false. The strategy pattern here makes it trivial to add new validation rules."
+  },
+  {
+    "id": "q101",
+    "category": "HTML/CSS & SQL",
+    "tag": "specificity",
+    "type": "predict-output",
+    "question": "What color is the paragraph?",
+    "code": "/* CSS */\np { color: blue; }\n.highlight { color: green; }\n#main p { color: red; }\n\n<!-- HTML -->\n<div id=\"main\">\n  <p class=\"highlight\">Hello</p>\n</div>",
+    "options": [
+      "Red — #main p has the highest specificity (1-0-1)",
+      "Green — class selectors override element selectors",
+      "Blue — element selector comes first",
+      "Black — conflicting rules cancel out"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Specificity is calculated as (IDs, Classes, Elements). p = (0,0,1), .highlight = (0,1,0), #main p = (1,0,1). The ID selector #main p has the highest specificity, so the paragraph is red regardless of source order."
+  },
+  {
+    "id": "q102",
+    "category": "HTML/CSS & SQL",
+    "tag": "specificity",
+    "type": "multiple-choice",
+    "question": "Which selector has the highest specificity?",
+    "options": [
+      "div#header .nav a.active — (1,2,2)",
+      "#header a — (1,0,1)",
+      ".nav .active — (0,2,0)",
+      "div div div div a — (0,0,5)"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Specificity: div#header .nav a.active = 1 ID + 2 classes + 2 elements = (1,2,2). #header a = (1,0,1). .nav .active = (0,2,0). div div div div a = (0,0,5). IDs always outweigh classes, and classes always outweigh elements, so (1,2,2) wins."
+  },
+  {
+    "id": "q103",
+    "category": "HTML/CSS & SQL",
+    "tag": "flexbox",
+    "type": "predict-output",
+    "question": "How are the items laid out?",
+    "code": ".container {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  height: 200px;\n}\n\n<!-- 3 child divs of varying heights -->",
+    "options": [
+      "Row, spaced evenly across width, vertically centered",
+      "Column, stacked top to bottom, left-aligned",
+      "Row, all items pushed to the left",
+      "Row, all items pushed to the right"
+    ],
+    "correctAnswer": 0,
+    "explanation": "display: flex creates a row by default (flex-direction: row). justify-content: space-between distributes items with equal space between them (first item at start, last at end). align-items: center vertically centers all items within the 200px container."
+  },
+  {
+    "id": "q104",
+    "category": "HTML/CSS & SQL",
+    "tag": "flexbox",
+    "type": "multiple-choice",
+    "question": "What does flex: 1 1 0 mean?",
+    "options": [
+      "flex-grow: 1, flex-shrink: 1, flex-basis: 0 — item grows and shrinks equally from zero base",
+      "width: 1px, height: 1px, margin: 0",
+      "flex-grow: 1, flex-shrink: 1, flex-basis: auto",
+      "One column, one row, zero gap"
+    ],
+    "correctAnswer": 0,
+    "explanation": "flex is shorthand for flex-grow, flex-shrink, flex-basis. flex: 1 1 0 means the item starts from zero width (flex-basis: 0), grows to fill available space equally with siblings (flex-grow: 1), and can shrink if needed (flex-shrink: 1)."
+  },
+  {
+    "id": "q105",
+    "category": "HTML/CSS & SQL",
+    "tag": "grid",
+    "type": "predict-output",
+    "question": "How many columns does this grid have?",
+    "code": ".grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 16px;\n}\n\n<!-- 7 child divs -->",
+    "options": [
+      "3 columns — the 7 items fill 3 rows (3 + 3 + 1)",
+      "7 columns — one per item",
+      "1 column — items stack vertically",
+      "4 columns — auto-calculated from 7 items"
+    ],
+    "correctAnswer": 0,
+    "explanation": "grid-template-columns: repeat(3, 1fr) creates exactly 3 equal-width columns. The 7 items flow into the grid: row 1 gets items 1-3, row 2 gets items 4-6, row 3 gets item 7 (leaving 2 empty cells). gap: 16px adds spacing between all cells."
+  },
+  {
+    "id": "q106",
+    "category": "HTML/CSS & SQL",
+    "tag": "grid",
+    "type": "multiple-choice",
+    "question": "What does grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) do?",
+    "options": [
+      "Creates as many 200px+ columns as fit, expanding equally to fill remaining space",
+      "Creates exactly one column that is 200px wide",
+      "Creates columns that are always exactly 200px",
+      "Fills all available space with one column"
+    ],
+    "correctAnswer": 0,
+    "explanation": "auto-fill creates as many columns as can fit in the container. minmax(200px, 1fr) means each column is at least 200px wide but can grow equally (1fr) to fill leftover space. This is the go-to pattern for responsive grids without media queries."
+  },
+  {
+    "id": "q107",
+    "category": "HTML/CSS & SQL",
+    "tag": "positioning",
+    "type": "predict-output",
+    "question": "Where does the .child element appear?",
+    "code": ".parent {\n  position: relative;\n  width: 400px;\n  height: 400px;\n}\n\n.child {\n  position: absolute;\n  top: 0;\n  right: 0;\n  width: 50px;\n  height: 50px;\n}",
+    "options": [
+      "Top-right corner of .parent",
+      "Top-right corner of the viewport",
+      "Top-left corner of .parent",
+      "Below .parent"
+    ],
+    "correctAnswer": 0,
+    "explanation": "position: absolute positions an element relative to its nearest positioned ancestor. Since .parent has position: relative, the .child is positioned relative to .parent. top: 0; right: 0 places it at the parent's top-right corner."
+  },
+  {
+    "id": "q108",
+    "category": "HTML/CSS & SQL",
+    "tag": "positioning",
+    "type": "multiple-choice",
+    "question": "What is the difference between position: fixed and position: sticky?",
+    "options": [
+      "Fixed is always relative to the viewport; sticky toggles between relative and fixed based on scroll position",
+      "Fixed stays in the DOM flow; sticky is removed from it",
+      "Sticky works only on the x-axis; fixed works on both",
+      "They are identical in behavior"
+    ],
+    "correctAnswer": 0,
+    "explanation": "position: fixed removes the element from the flow and positions it relative to the viewport — it stays in place during scroll. position: sticky acts like relative until the element reaches a scroll threshold (e.g., top: 0), then it behaves like fixed within its container."
+  },
+  {
+    "id": "q109",
+    "category": "HTML/CSS & SQL",
+    "tag": "joins",
+    "type": "predict-output",
+    "question": "How many rows does this query return?",
+    "code": "-- users: (1,'Alice'), (2,'Bob'), (3,'Carol')\n-- orders: (1,1,'Book'), (2,1,'Pen'), (3,2,'Notebook')\n\nSELECT u.name, o.item\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id;",
+    "options": [
+      "4 rows — Alice(Book), Alice(Pen), Bob(Notebook), Carol(NULL)",
+      "3 rows — one per user",
+      "3 rows — one per order",
+      "2 rows — only users with orders"
+    ],
+    "correctAnswer": 0,
+    "explanation": "LEFT JOIN returns all rows from the left table (users), plus matching rows from orders. Alice has 2 orders (2 rows), Bob has 1 (1 row), Carol has none but still appears with NULL for item. Total: 4 rows."
+  },
+  {
+    "id": "q110",
+    "category": "HTML/CSS & SQL",
+    "tag": "joins",
+    "type": "multiple-choice",
+    "question": "What is the difference between INNER JOIN and LEFT JOIN?",
+    "options": [
+      "INNER JOIN returns only matching rows; LEFT JOIN includes all left-table rows even without matches",
+      "INNER JOIN is faster; LEFT JOIN is more accurate",
+      "LEFT JOIN returns only the left table; INNER JOIN returns both",
+      "INNER JOIN requires an ON clause; LEFT JOIN does not"
+    ],
+    "correctAnswer": 0,
+    "explanation": "INNER JOIN returns rows only when there's a match in both tables. LEFT JOIN returns all rows from the left table, padding with NULLs when there's no match in the right table. Use LEFT JOIN when you need to include records that have no related data."
+  },
+  {
+    "id": "q111",
+    "category": "HTML/CSS & SQL",
+    "tag": "indexing",
+    "type": "multiple-choice",
+    "question": "Why does adding an index to a column speed up SELECT but can slow down INSERT?",
+    "options": [
+      "The index must be updated on every insert — maintaining the sorted structure has overhead",
+      "Indexes lock the table during inserts",
+      "Indexes compress the data, making inserts decompress it",
+      "Indexes are only used for SELECT, not INSERT"
+    ],
+    "correctAnswer": 0,
+    "explanation": "An index is a separate data structure (usually a B-tree) that must be kept in sync with the table. Every INSERT must also update the index — finding the correct position and potentially rebalancing the tree. More indexes means more write overhead. Only index columns you frequently query."
+  },
+  {
+    "id": "q112",
+    "category": "HTML/CSS & SQL",
+    "tag": "normalization",
+    "type": "multiple-choice",
+    "question": "What problem does database normalization solve?",
+    "options": [
+      "Data redundancy — eliminating duplicate data that can become inconsistent",
+      "Slow read queries — normalized tables are always faster to query",
+      "Schema migrations — normalized databases never need migrations",
+      "Storage limits — normalization compresses data"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Normalization splits data into related tables to eliminate redundancy. Without it, the same data (e.g., a customer's address) is stored in multiple rows and can become inconsistent if one copy is updated but others aren't. The tradeoff: normalized data requires joins, which can be slower for reads."
   }
 ]
