@@ -540,5 +540,411 @@
     ],
     "correctAnswer": 0,
     "explanation": "var declarations are hoisted AND initialized to undefined, so console.log(a) logs undefined. let declarations are hoisted but NOT initialized — they sit in the temporal dead zone until the declaration is reached, so accessing b throws a ReferenceError."
+  },
+  {
+    "id": "q35",
+    "category": "React",
+    "tag": "useRef",
+    "type": "predict-output",
+    "question": "What does the component log on each render?",
+    "code": "function RenderCounter() {\n  const renderCount = useRef(0);\n  renderCount.current++;\n\n  console.log('Renders:', renderCount.current);\n\n  return <button onClick={() => setState({})}>Re-render</button>;\n}",
+    "options": [
+      "Increments each render: 1, 2, 3, ...",
+      "Always logs 1",
+      "Always logs 0",
+      "Throws an error"
+    ],
+    "correctAnswer": 0,
+    "explanation": "useRef persists a mutable value across renders without causing re-renders. renderCount.current increments on each render and retains its value because the ref object is stable across the component's lifetime."
+  },
+  {
+    "id": "q36",
+    "category": "React",
+    "tag": "useRef",
+    "type": "multiple-choice",
+    "question": "Why does updating a ref NOT trigger a re-render?",
+    "options": [
+      "Refs are mutable objects outside React's state system — React doesn't track .current changes",
+      "Refs are frozen with Object.freeze after creation",
+      "Refs are only read during the commit phase",
+      "Refs use a separate virtual DOM"
+    ],
+    "correctAnswer": 0,
+    "explanation": "useRef returns a plain mutable object { current: value }. Mutating .current doesn't notify React of any change, so no re-render is scheduled. This makes refs ideal for values you need to persist without triggering renders."
+  },
+  {
+    "id": "q37",
+    "category": "React",
+    "tag": "useRef",
+    "type": "predict-output",
+    "question": "What does clicking the button log?",
+    "code": "function FocusInput() {\n  const inputRef = useRef(null);\n\n  const handleClick = () => {\n    console.log(inputRef.current?.tagName);\n    inputRef.current?.focus();\n  };\n\n  return (\n    <>\n      <input ref={inputRef} />\n      <button onClick={handleClick}>Focus</button>\n    </>\n  );\n}",
+    "options": [
+      "\"INPUT\"",
+      "\"input\"",
+      "undefined",
+      "The DOM element object"
+    ],
+    "correctAnswer": 0,
+    "explanation": "When a ref is attached to a JSX element, React sets ref.current to the actual DOM node after mounting. DOM elements have an uppercase tagName property, so inputRef.current.tagName is \"INPUT\"."
+  },
+  {
+    "id": "q38",
+    "category": "React",
+    "tag": "useMemo",
+    "type": "predict-output",
+    "question": "How many times does the expensive computation run?",
+    "code": "function FilteredList({ items, query }) {\n  const filtered = useMemo(\n    () => {\n      console.log('Computing...');\n      return items.filter(i => i.includes(query));\n    },\n    [items, query]\n  );\n\n  const [count, setCount] = useState(0);\n\n  return (\n    <>\n      <button onClick={() => setCount(c => c + 1)}>Clicked {count}</button>\n      <ul>{filtered.map(i => <li key={i}>{i}</li>)}</ul>\n    </>\n  );\n}\n\n// User clicks the button 3 times (items and query don't change)",
+    "options": [
+      "Once (initial render only)",
+      "4 times (initial + 3 clicks)",
+      "0 times",
+      "3 times (once per click)"
+    ],
+    "correctAnswer": 0,
+    "explanation": "useMemo caches the result and only recomputes when its dependencies change. Since items and query don't change across the 3 button clicks, the expensive filter runs only once on the initial render."
+  },
+  {
+    "id": "q39",
+    "category": "React",
+    "tag": "useMemo",
+    "type": "multiple-choice",
+    "question": "When should you NOT use useMemo?",
+    "options": [
+      "When the computation is cheap and fast",
+      "When filtering a large list on every render",
+      "When creating a derived object used in a dependency array",
+      "When computing an expensive sort"
+    ],
+    "correctAnswer": 0,
+    "explanation": "useMemo has overhead — it must store the previous value and compare dependencies. For cheap computations, the memoization cost can exceed the computation cost itself. Only memoize when the computation is genuinely expensive or when referential stability matters."
+  },
+  {
+    "id": "q40",
+    "category": "React",
+    "tag": "useCallback",
+    "type": "predict-output",
+    "question": "Does the Child component re-render when the button is clicked?",
+    "code": "const Child = React.memo(({ onClick }) => {\n  console.log('Child rendered');\n  return <button onClick={onClick}>Child</button>;\n});\n\nfunction Parent() {\n  const [count, setCount] = useState(0);\n  const handleClick = () => console.log('clicked');\n\n  return (\n    <>\n      <button onClick={() => setCount(c => c + 1)}>Count: {count}</button>\n      <Child onClick={handleClick} />\n    </>\n  );\n}\n\n// User clicks the Count button once",
+    "options": [
+      "Yes — handleClick is recreated on every render, breaking memo",
+      "No — React.memo prevents all re-renders",
+      "No — handleClick has no dependencies",
+      "Yes — but only because count changed"
+    ],
+    "correctAnswer": 0,
+    "explanation": "handleClick is a new function reference on every render. React.memo does a shallow comparison of props, sees a different onClick reference, and re-renders Child. Fix: wrap handleClick in useCallback."
+  },
+  {
+    "id": "q41",
+    "category": "React",
+    "tag": "useCallback",
+    "type": "predict-output",
+    "question": "Does the Child re-render now?",
+    "code": "const Child = React.memo(({ onClick }) => {\n  console.log('Child rendered');\n  return <button onClick={onClick}>Child</button>;\n});\n\nfunction Parent() {\n  const [count, setCount] = useState(0);\n  const handleClick = useCallback(() => console.log('clicked'), []);\n\n  return (\n    <>\n      <button onClick={() => setCount(c => c + 1)}>Count: {count}</button>\n      <Child onClick={handleClick} />\n    </>\n  );\n}\n\n// User clicks the Count button once",
+    "options": [
+      "No — useCallback preserves the reference, memo skips re-render",
+      "Yes — Parent re-rendered so Child must too",
+      "No — but only because count isn't passed to Child",
+      "Yes — useCallback doesn't prevent re-renders"
+    ],
+    "correctAnswer": 0,
+    "explanation": "useCallback with [] returns the same function reference across renders. React.memo sees the same onClick prop and skips the re-render. This is the correct pattern: useCallback + React.memo together."
+  },
+  {
+    "id": "q42",
+    "category": "React",
+    "tag": "useCallback",
+    "type": "multiple-choice",
+    "question": "What is the relationship between useMemo and useCallback?",
+    "options": [
+      "useCallback(fn, deps) is equivalent to useMemo(() => fn, deps)",
+      "useMemo caches values, useCallback caches components",
+      "useCallback is for async functions, useMemo is for sync",
+      "They are completely unrelated hooks"
+    ],
+    "correctAnswer": 0,
+    "explanation": "useCallback is syntactic sugar for useMemo that returns a function. useCallback(fn, deps) is identical to useMemo(() => fn, deps). Both cache a value — useCallback just specializes in caching function references."
+  },
+  {
+    "id": "q43",
+    "category": "React",
+    "tag": "context",
+    "type": "predict-output",
+    "question": "What does the Consumer component display?",
+    "code": "const ThemeContext = createContext('light');\n\nfunction App() {\n  return (\n    <ThemeContext.Provider value=\"dark\">\n      <Wrapper />\n    </ThemeContext.Provider>\n  );\n}\n\nfunction Wrapper() {\n  return <Consumer />;\n}\n\nfunction Consumer() {\n  const theme = useContext(ThemeContext);\n  return <div>{theme}</div>;\n}",
+    "options": [
+      "\"dark\"",
+      "\"light\"",
+      "undefined",
+      "Throws an error"
+    ],
+    "correctAnswer": 0,
+    "explanation": "useContext finds the nearest Provider above in the tree and reads its value. Even though Wrapper sits between Provider and Consumer, useContext skips intermediate components and reads \"dark\" from the Provider."
+  },
+  {
+    "id": "q44",
+    "category": "React",
+    "tag": "context",
+    "type": "multiple-choice",
+    "question": "What happens when a context Provider's value changes?",
+    "options": [
+      "All components calling useContext for that context re-render, even if wrapped in React.memo",
+      "Only the direct children of the Provider re-render",
+      "React.memo prevents re-renders from context changes",
+      "Only the Provider component re-renders"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Context changes bypass React.memo and shouldComponentUpdate. Any component that calls useContext(SomeContext) will re-render when the Provider's value changes, regardless of memoization. This is why it's important to keep context values stable or split contexts."
+  },
+  {
+    "id": "q45",
+    "category": "React",
+    "tag": "context",
+    "type": "predict-output",
+    "question": "What does the component display?",
+    "code": "const CountContext = createContext(0);\n\nfunction Display() {\n  const count = useContext(CountContext);\n  return <span>{count}</span>;\n}\n\nfunction App() {\n  return (\n    <CountContext.Provider value={5}>\n      <CountContext.Provider value={10}>\n        <Display />\n      </CountContext.Provider>\n    </CountContext.Provider>\n  );\n}",
+    "options": [
+      "10",
+      "5",
+      "0",
+      "15"
+    ],
+    "correctAnswer": 0,
+    "explanation": "When multiple Providers of the same context are nested, useContext reads from the nearest one. The inner Provider with value={10} is closest to Display, so it reads 10."
+  },
+  {
+    "id": "q46",
+    "category": "React",
+    "tag": "reconciliation & keys",
+    "type": "predict-output",
+    "question": "What happens to the input's typed text when the button is clicked?",
+    "code": "function App() {\n  const [reversed, setReversed] = useState(false);\n  const items = reversed ? ['B', 'A'] : ['A', 'B'];\n\n  return (\n    <>\n      {items.map(item => (\n        <div key={item}>\n          {item}: <input />\n        </div>\n      ))}\n      <button onClick={() => setReversed(r => !r)}>Reverse</button>\n    </>\n  );\n}",
+    "options": [
+      "Text follows its key — inputs swap positions with their text intact",
+      "Text stays in the same DOM position — inputs don't move",
+      "All input text is cleared",
+      "React throws a key warning"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Keys tell React which element is which across renders. When the order reverses, React matches elements by key and moves the DOM nodes accordingly. The input state travels with its key, so typed text follows the item."
+  },
+  {
+    "id": "q47",
+    "category": "React",
+    "tag": "reconciliation & keys",
+    "type": "predict-output",
+    "question": "What happens to the input's typed text when the button is clicked?",
+    "code": "function App() {\n  const [reversed, setReversed] = useState(false);\n  const items = reversed ? ['B', 'A'] : ['A', 'B'];\n\n  return (\n    <>\n      {items.map((item, index) => (\n        <div key={index}>\n          {item}: <input />\n        </div>\n      ))}\n      <button onClick={() => setReversed(r => !r)}>Reverse</button>\n    </>\n  );\n}",
+    "options": [
+      "Text stays in position — labels swap but inputs keep their old text",
+      "Text follows the item correctly",
+      "All input text is cleared",
+      "React throws an error"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Using index as key means key={0} is always the first element. When items reverse, React sees the same keys in the same positions, so it reuses the DOM nodes — only updating the text content. The input state stays in place while labels swap around it. This is why index keys are problematic with reorderable lists."
+  },
+  {
+    "id": "q48",
+    "category": "React",
+    "tag": "reconciliation & keys",
+    "type": "multiple-choice",
+    "question": "How do you force React to unmount and remount a component?",
+    "options": [
+      "Change the component's key prop",
+      "Call forceUpdate()",
+      "Set state to null then back",
+      "Use useEffect with an empty dependency array"
+    ],
+    "correctAnswer": 0,
+    "explanation": "When a component's key changes, React treats it as a completely new element — it unmounts the old instance (destroying all state) and mounts a fresh one. This is a useful pattern for resetting component state."
+  },
+  {
+    "id": "q49",
+    "category": "React",
+    "tag": "controlled components",
+    "type": "predict-output",
+    "question": "What happens when the user types in the input?",
+    "code": "function Form() {\n  const [value, setValue] = useState('');\n\n  return (\n    <input\n      value={value}\n      onChange={(e) => {\n        if (e.target.value.length <= 5) {\n          setValue(e.target.value);\n        }\n      }}\n    />\n  );\n}",
+    "options": [
+      "Input accepts up to 5 characters, then stops",
+      "Input always shows all typed characters",
+      "Input shows nothing — onChange blocks all input",
+      "React throws a warning about controlled inputs"
+    ],
+    "correctAnswer": 0,
+    "explanation": "This is a controlled input — React owns its value. The onChange handler only calls setValue when the length is 5 or less. After 5 characters, setValue is never called, so React re-renders with the same 5-character value, effectively blocking further input."
+  },
+  {
+    "id": "q50",
+    "category": "React",
+    "tag": "controlled components",
+    "type": "multiple-choice",
+    "question": "What causes the 'changing an uncontrolled input to controlled' warning?",
+    "options": [
+      "Starting with value={undefined} then setting it to a string",
+      "Using both value and defaultValue",
+      "Forgetting to add an onChange handler",
+      "Using refs on a controlled input"
+    ],
+    "correctAnswer": 0,
+    "explanation": "When value is undefined, React treats the input as uncontrolled (user manages the DOM value). When value becomes a string, it switches to controlled. This flip confuses React. Fix: initialize state as an empty string, not undefined."
+  },
+  {
+    "id": "q51",
+    "category": "React",
+    "tag": "custom hooks",
+    "type": "predict-output",
+    "question": "What does each component display?",
+    "code": "function useCounter(initial = 0) {\n  const [count, setCount] = useState(initial);\n  return { count, increment: () => setCount(c => c + 1) };\n}\n\nfunction A() {\n  const { count, increment } = useCounter(0);\n  return <button onClick={increment}>A: {count}</button>;\n}\n\nfunction B() {\n  const { count, increment } = useCounter(0);\n  return <button onClick={increment}>B: {count}</button>;\n}\n\n// User clicks A's button twice, B's button once",
+    "options": [
+      "A: 2, B: 1 — each has independent state",
+      "A: 2, B: 2 — they share state through the hook",
+      "A: 3, B: 3 — hooks share a global counter",
+      "A: 1, B: 2 — state leaks between hooks"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Custom hooks don't share state between components. Each call to useCounter creates its own independent useState. A and B each have their own count variable, so clicking A doesn't affect B."
+  },
+  {
+    "id": "q52",
+    "category": "React",
+    "tag": "custom hooks",
+    "type": "multiple-choice",
+    "question": "What is the rule for naming custom hooks?",
+    "options": [
+      "Must start with 'use' — this lets React enforce the rules of hooks",
+      "Must start with 'hook' — this is a naming convention only",
+      "No naming requirement — any function can be a hook",
+      "Must be a class method prefixed with 'use'"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Custom hooks must start with 'use' (e.g., useCounter, useFetch). This convention allows React's linter to verify that hooks are called correctly — only at the top level of components or other hooks, never conditionally."
+  },
+  {
+    "id": "q53",
+    "category": "React",
+    "tag": "custom hooks",
+    "type": "predict-output",
+    "question": "What does the component display after the fetch completes?",
+    "code": "function useFetch(url) {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    fetch(url)\n      .then(res => res.json())\n      .then(json => {\n        setData(json);\n        setLoading(false);\n      });\n  }, [url]);\n\n  return { data, loading };\n}\n\nfunction Profile() {\n  const { data, loading } = useFetch('/api/user');\n  if (loading) return <div>Loading...</div>;\n  return <div>{data.name}</div>;\n}\n\n// /api/user returns { name: 'Alice' }",
+    "options": [
+      "\"Loading...\" then \"Alice\"",
+      "\"Alice\" immediately",
+      "\"Loading...\" forever",
+      "null"
+    ],
+    "correctAnswer": 0,
+    "explanation": "On first render, loading is true so \"Loading...\" shows. The useEffect fires, fetches the data, then calls setData and setLoading(false). The component re-renders with loading=false and displays data.name (\"Alice\")."
+  },
+  {
+    "id": "q54",
+    "category": "React",
+    "tag": "data fetching",
+    "type": "multiple-choice",
+    "question": "What is the main advantage of TanStack Query (React Query) over useEffect + fetch?",
+    "options": [
+      "Automatic caching, deduplication, and background refetching",
+      "It makes fetch requests faster",
+      "It replaces the need for a backend API",
+      "It works without React"
+    ],
+    "correctAnswer": 0,
+    "explanation": "TanStack Query manages server state with built-in caching (avoid refetching data you already have), request deduplication (multiple components requesting the same data trigger one fetch), and background refetching (stale-while-revalidate). useEffect + fetch requires you to build all of this manually."
+  },
+  {
+    "id": "q55",
+    "category": "React",
+    "tag": "data fetching",
+    "type": "multiple-choice",
+    "question": "When is useEffect + fetch preferable to TanStack Query?",
+    "options": [
+      "A single fire-once fetch with no caching or refetching needs",
+      "Multiple components sharing the same API data",
+      "Paginated or infinite scroll lists",
+      "Data that needs optimistic updates"
+    ],
+    "correctAnswer": 0,
+    "explanation": "For a single fetch that runs once on mount with no caching, deduplication, or background refetching needs, useEffect + fetch is simpler and adds no dependency. TanStack Query shines when you have complex server state management across multiple components."
+  },
+  {
+    "id": "q56",
+    "category": "React",
+    "tag": "data fetching",
+    "type": "predict-output",
+    "question": "What does useQuery return while the fetch is in progress?",
+    "code": "function UserList() {\n  const { data, isLoading, error } = useQuery({\n    queryKey: ['users'],\n    queryFn: () => fetch('/api/users').then(r => r.json())\n  });\n\n  console.log(isLoading, data, error);\n  // What is logged on the first render?\n}",
+    "options": [
+      "true, undefined, null",
+      "false, [], null",
+      "true, [], null",
+      "false, undefined, null"
+    ],
+    "correctAnswer": 0,
+    "explanation": "On the first render before the query resolves, isLoading is true, data is undefined (no cached data exists), and error is null. Once the fetch completes, useQuery triggers a re-render with isLoading=false and data populated."
+  },
+  {
+    "id": "q57",
+    "category": "React",
+    "tag": "React.memo",
+    "type": "predict-output",
+    "question": "How many times does Child render?",
+    "code": "const Child = React.memo(({ name }) => {\n  console.log('Child render');\n  return <div>{name}</div>;\n});\n\nfunction Parent() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <>\n      <Child name=\"fixed\" />\n      <button onClick={() => setCount(c => c + 1)}>\n        Count: {count}\n      </button>\n    </>\n  );\n}\n\n// User clicks the button 3 times",
+    "options": [
+      "1 time (initial render only)",
+      "4 times (initial + 3 clicks)",
+      "0 times",
+      "3 times (once per click)"
+    ],
+    "correctAnswer": 0,
+    "explanation": "React.memo does a shallow comparison of props. Since name=\"fixed\" is the same string on every render, memo determines the props haven't changed and skips re-rendering Child. It only renders once on mount."
+  },
+  {
+    "id": "q58",
+    "category": "React",
+    "tag": "React.memo",
+    "type": "predict-output",
+    "question": "Does React.memo prevent the re-render here?",
+    "code": "const Child = React.memo(({ style }) => {\n  console.log('Child render');\n  return <div style={style}>Hello</div>;\n});\n\nfunction Parent() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <>\n      <Child style={{ color: 'red' }} />\n      <button onClick={() => setCount(c => c + 1)}>Click</button>\n    </>\n  );\n}\n\n// User clicks the button once",
+    "options": [
+      "No — the inline object creates a new reference every render",
+      "Yes — the object has the same content",
+      "Yes — React.memo does deep comparison",
+      "No — React.memo doesn't work with style props"
+    ],
+    "correctAnswer": 0,
+    "explanation": "React.memo uses shallow comparison (Object.is). The inline { color: 'red' } is a new object on every render, so the reference changes even though the content is identical. Fix: move the object outside the component or wrap it in useMemo."
+  },
+  {
+    "id": "q59",
+    "category": "React",
+    "tag": "React.memo",
+    "type": "multiple-choice",
+    "question": "How can you customize React.memo's comparison logic?",
+    "options": [
+      "Pass a custom comparison function as the second argument",
+      "Override shouldComponentUpdate in the wrapped component",
+      "Use a special 'compare' prop on the component",
+      "You cannot — React.memo always uses shallow comparison"
+    ],
+    "correctAnswer": 0,
+    "explanation": "React.memo accepts an optional second argument: a function (prevProps, nextProps) => boolean. Return true to skip re-render, false to allow it. This lets you do deep comparisons or compare only specific props."
+  },
+  {
+    "id": "q60",
+    "category": "React",
+    "tag": "reconciliation & keys",
+    "type": "predict-output",
+    "question": "What happens when isLoggedIn changes from false to true?",
+    "code": "function App({ isLoggedIn }) {\n  return (\n    <div>\n      {isLoggedIn ? (\n        <input placeholder=\"Search\" />\n      ) : (\n        <input placeholder=\"Username\" />\n      )}\n    </div>\n  );\n}\n\n// User types 'hello' in the Username input, then isLoggedIn becomes true",
+    "options": [
+      "Search input appears with 'hello' still in it",
+      "Search input appears empty",
+      "Username input stays",
+      "Both inputs appear"
+    ],
+    "correctAnswer": 0,
+    "explanation": "React sees an <input> in the same position in both branches. Since the element type (input) and position haven't changed, React reuses the DOM node and just updates the placeholder. The typed text persists. Fix: add different key props to force React to treat them as distinct elements."
   }
 ]
