@@ -1327,5 +1327,254 @@
     ],
     "correctAnswer": 0,
     "explanation": "Conditional types distribute over unions. Each member is checked independently: string extends string → never, number extends string → number, boolean extends string → boolean. The results union together: never | number | boolean simplifies to number | boolean. This is how the built-in Exclude utility type works."
+  },
+  {
+    "id": "q85",
+    "category": "Patterns",
+    "tag": "debounce & throttle",
+    "type": "predict-output",
+    "question": "How many times does sendRequest fire?",
+    "code": "function debounce(fn, delay) {\n  let timer;\n  return (...args) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n}\n\nconst send = debounce(sendRequest, 300);\n\n// User types 5 characters rapidly (one every 100ms)\nsend('h'); send('he'); send('hel'); send('hell'); send('hello');",
+    "options": [
+      "Once — only the last call fires after 300ms of inactivity",
+      "5 times — once per call",
+      "0 times — the timer never resolves",
+      "2 times — first and last"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Each call clears the previous timer and sets a new one. Since the calls are 100ms apart but the delay is 300ms, every call resets the timer before it fires. Only the last call ('hello') survives long enough to execute after 300ms of inactivity."
+  },
+  {
+    "id": "q86",
+    "category": "Patterns",
+    "tag": "debounce & throttle",
+    "type": "multiple-choice",
+    "question": "What is the key difference between debounce and throttle?",
+    "options": [
+      "Debounce waits for inactivity; throttle fires at most once per interval",
+      "Debounce is faster; throttle is more accurate",
+      "Debounce is for inputs; throttle is for scroll events only",
+      "They are the same — just different names"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Debounce delays execution until a pause in calls (good for search inputs). Throttle ensures a function fires at most once per time window, regardless of how many times it's called (good for scroll/resize handlers where you want periodic updates)."
+  },
+  {
+    "id": "q87",
+    "category": "Patterns",
+    "tag": "debounce & throttle",
+    "type": "predict-output",
+    "question": "How many times does handleScroll fire during 1 second of continuous scrolling?",
+    "code": "function throttle(fn, limit) {\n  let lastCall = 0;\n  return (...args) => {\n    const now = Date.now();\n    if (now - lastCall >= limit) {\n      lastCall = now;\n      fn(...args);\n    }\n  };\n}\n\nconst onScroll = throttle(handleScroll, 200);\n\n// Browser fires scroll events every 16ms for 1 second (≈62 events)",
+    "options": [
+      "5 times — once every 200ms",
+      "62 times — once per event",
+      "1 time — only the first call",
+      "0 times — throttle blocks all calls"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The throttle allows one call every 200ms. Over 1 second, that's roughly 5 calls (at 0ms, 200ms, 400ms, 600ms, 800ms). The other ~57 scroll events are silently dropped because they fall within the 200ms cooldown window."
+  },
+  {
+    "id": "q88",
+    "category": "Patterns",
+    "tag": "observer",
+    "type": "predict-output",
+    "question": "What does this code log?",
+    "code": "class EventEmitter {\n  constructor() { this.listeners = {}; }\n  on(event, fn) {\n    (this.listeners[event] ||= []).push(fn);\n  }\n  emit(event, data) {\n    (this.listeners[event] || []).forEach(fn => fn(data));\n  }\n}\n\nconst bus = new EventEmitter();\nbus.on('msg', d => console.log('A:', d));\nbus.on('msg', d => console.log('B:', d));\nbus.emit('msg', 'hello');",
+    "options": [
+      "\"A: hello\" then \"B: hello\"",
+      "\"B: hello\" then \"A: hello\"",
+      "\"A: hello\" only",
+      "Nothing — emit doesn't match any listener"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The observer pattern: listeners subscribe to events, and emit notifies all subscribers in registration order. Both A and B subscribed to 'msg', so both fire in order when 'hello' is emitted."
+  },
+  {
+    "id": "q89",
+    "category": "Patterns",
+    "tag": "observer",
+    "type": "multiple-choice",
+    "question": "What problem does the observer pattern solve?",
+    "options": [
+      "Decoupling producers from consumers — emitters don't need to know who listens",
+      "Making synchronous code asynchronous",
+      "Preventing memory leaks in event handlers",
+      "Ensuring events are processed in parallel"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The observer pattern lets an object (subject) notify dependents (observers) of state changes without knowing who they are. This decoupling means you can add/remove listeners without modifying the emitter. Common in DOM events, Node.js EventEmitter, and state management."
+  },
+  {
+    "id": "q90",
+    "category": "Patterns",
+    "tag": "pub/sub",
+    "type": "multiple-choice",
+    "question": "How does pub/sub differ from the observer pattern?",
+    "options": [
+      "Pub/sub uses a message broker — publishers and subscribers don't reference each other",
+      "Pub/sub is synchronous; observer is asynchronous",
+      "Observer uses topics; pub/sub uses direct references",
+      "They are identical patterns with different names"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In the observer pattern, the subject holds direct references to observers. In pub/sub, a message broker (event bus) sits between publishers and subscribers — neither side knows about the other. This adds an extra layer of decoupling."
+  },
+  {
+    "id": "q91",
+    "category": "Patterns",
+    "tag": "pub/sub",
+    "type": "predict-output",
+    "question": "What does this code log?",
+    "code": "const broker = {\n  subs: {},\n  subscribe(topic, fn) {\n    (this.subs[topic] ||= []).push(fn);\n    return () => {\n      this.subs[topic] = this.subs[topic].filter(f => f !== fn);\n    };\n  },\n  publish(topic, data) {\n    (this.subs[topic] || []).forEach(fn => fn(data));\n  }\n};\n\nconst unsub = broker.subscribe('news', d => console.log('Got:', d));\nbroker.publish('news', 'first');\nunsub();\nbroker.publish('news', 'second');",
+    "options": [
+      "\"Got: first\" only",
+      "\"Got: first\" then \"Got: second\"",
+      "\"Got: second\" only",
+      "Nothing"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The subscribe method returns an unsubscribe function. After 'first' is published, unsub() removes the listener. The second publish finds no subscribers for 'news', so nothing logs. The cleanup function prevents memory leaks."
+  },
+  {
+    "id": "q92",
+    "category": "Patterns",
+    "tag": "module",
+    "type": "predict-output",
+    "question": "What does this code log?",
+    "code": "// counter.js\nlet count = 0;\nexport const increment = () => ++count;\nexport const getCount = () => count;\n\n// a.js\nimport { increment, getCount } from './counter.js';\nincrement();\nincrement();\nconsole.log('A:', getCount());\n\n// b.js\nimport { getCount } from './counter.js';\nconsole.log('B:', getCount());",
+    "options": [
+      "A: 2, B: 2 — modules are singletons, state is shared",
+      "A: 2, B: 0 — each import gets its own copy",
+      "A: 2, B: undefined",
+      "Error — can't mutate imported values"
+    ],
+    "correctAnswer": 0,
+    "explanation": "ES modules are evaluated once and cached. All imports of the same module share the same instance. When a.js increments count to 2, b.js sees the same count because they reference the same module scope. This is the module pattern — encapsulated shared state."
+  },
+  {
+    "id": "q93",
+    "category": "Patterns",
+    "tag": "module",
+    "type": "multiple-choice",
+    "question": "What is the main benefit of the module pattern?",
+    "options": [
+      "Encapsulation — expose a public API while keeping internal state private",
+      "Performance — modules load faster than scripts",
+      "Type safety — modules enforce types at runtime",
+      "Parallelism — modules run in separate threads"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The module pattern creates a closure that hides internal variables and functions, exposing only a public API. In the example, count is private — external code can only interact with it through increment() and getCount(). This prevents accidental modification of internal state."
+  },
+  {
+    "id": "q94",
+    "category": "Patterns",
+    "tag": "factory",
+    "type": "predict-output",
+    "question": "What does this code log?",
+    "code": "function createUser(name, role) {\n  return {\n    name,\n    role,\n    greet() { return `${this.name} (${this.role})`; }\n  };\n}\n\nconst admin = createUser('Alice', 'admin');\nconst guest = createUser('Bob', 'guest');\n\nconsole.log(admin.greet());\nconsole.log(admin instanceof createUser);",
+    "options": [
+      "\"Alice (admin)\", false",
+      "\"Alice (admin)\", true",
+      "\"undefined (undefined)\", false",
+      "Error — createUser is not a constructor"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The factory function returns a plain object — no new keyword, no prototype chain. greet() works because this refers to the object. But instanceof checks the prototype chain, and factory-created objects don't have one linked to createUser, so it's false."
+  },
+  {
+    "id": "q95",
+    "category": "Patterns",
+    "tag": "factory",
+    "type": "multiple-choice",
+    "question": "When should you prefer a factory function over a class?",
+    "options": [
+      "When you need to return different object shapes based on input",
+      "When you need inheritance hierarchies",
+      "When you need instanceof checks",
+      "When you need static methods"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Factories excel at conditional creation — returning different object structures based on parameters without exposing the creation logic. Classes are better when you need inheritance, instanceof, or shared prototype methods. Factories also avoid this-binding issues."
+  },
+  {
+    "id": "q96",
+    "category": "Patterns",
+    "tag": "singleton",
+    "type": "predict-output",
+    "question": "Are a and b the same instance?",
+    "code": "class Database {\n  static instance;\n  constructor() {\n    if (Database.instance) return Database.instance;\n    this.connection = 'connected';\n    Database.instance = this;\n  }\n}\n\nconst a = new Database();\nconst b = new Database();\nconsole.log(a === b);\nconsole.log(b.connection);",
+    "options": [
+      "true, \"connected\"",
+      "false, \"connected\"",
+      "true, undefined",
+      "false, undefined"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The constructor returns the existing instance if one exists. The first new Database() creates the instance and stores it. The second new Database() hits the if check and returns the same object. Both variables reference the same instance, so a === b is true."
+  },
+  {
+    "id": "q97",
+    "category": "Patterns",
+    "tag": "singleton",
+    "type": "multiple-choice",
+    "question": "Why are singletons often considered an anti-pattern in modern JavaScript?",
+    "options": [
+      "They introduce hidden global state and make testing difficult",
+      "They use too much memory",
+      "They are slower than regular objects",
+      "JavaScript doesn't support the singleton pattern"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Singletons create global shared state that's hard to reset between tests, difficult to mock, and creates implicit coupling. In modern JS, ES module singletons (just exporting an instance) are preferred over class-based singletons, and dependency injection makes testing easier."
+  },
+  {
+    "id": "q98",
+    "category": "Patterns",
+    "tag": "strategy",
+    "type": "predict-output",
+    "question": "What does this code log?",
+    "code": "const strategies = {\n  add: (a, b) => a + b,\n  multiply: (a, b) => a * b,\n  subtract: (a, b) => a - b,\n};\n\nfunction calculate(strategy, a, b) {\n  return strategies[strategy](a, b);\n}\n\nconsole.log(calculate('add', 3, 4));\nconsole.log(calculate('multiply', 3, 4));",
+    "options": [
+      "7, 12",
+      "\"add\", \"multiply\"",
+      "undefined, undefined",
+      "Error — strategies is not a function"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The strategy pattern uses a lookup object to select behavior at runtime. calculate('add', 3, 4) finds strategies.add and calls it with (3, 4), returning 7. calculate('multiply', 3, 4) returns 3 * 4 = 12."
+  },
+  {
+    "id": "q99",
+    "category": "Patterns",
+    "tag": "strategy",
+    "type": "multiple-choice",
+    "question": "What problem does the strategy pattern solve?",
+    "options": [
+      "Eliminates long if/else or switch chains by mapping behavior to interchangeable functions",
+      "Makes code run faster by choosing the optimal algorithm",
+      "Prevents runtime errors by validating inputs",
+      "Ensures only one algorithm runs at a time"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Instead of branching with if/else or switch to pick behavior, the strategy pattern stores algorithms in a map and selects one by key. This makes it easy to add new strategies without modifying existing code (open/closed principle)."
+  },
+  {
+    "id": "q100",
+    "category": "Patterns",
+    "tag": "strategy",
+    "type": "predict-output",
+    "question": "What does this validation code return?",
+    "code": "const validators = {\n  required: v => v !== '' && v != null,\n  minLength: (v, len) => v.length >= len,\n  isEmail: v => /^[^@]+@[^@]+$/.test(v),\n};\n\nfunction validate(value, rules) {\n  return rules.every(([rule, ...args]) =>\n    validators[rule](value, ...args)\n  );\n}\n\nconsole.log(validate('hi', [['required'], ['minLength', 3]]));",
+    "options": [
+      "false — 'hi' passes required but fails minLength(3)",
+      "true — both rules pass",
+      "Error — rules format is invalid",
+      "undefined"
+    ],
+    "correctAnswer": 0,
+    "explanation": "'hi' is not empty so required passes. But 'hi'.length is 2, which is less than 3, so minLength fails. every() short-circuits on the first false, returning false. The strategy pattern here makes it trivial to add new validation rules."
   }
 ]
