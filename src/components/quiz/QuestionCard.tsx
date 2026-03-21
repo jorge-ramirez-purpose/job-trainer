@@ -1,8 +1,8 @@
-import { Question } from '../../types/Question'
+import { TQuestion } from '../../types/Question'
 import { CodeBlock } from '../common/CodeBlock'
 
-interface QuestionCardProps {
-  question: Question
+type TQuestionCardProps = {
+  question: TQuestion
   selectedAnswer: number | null
   showExplanation: boolean
   showXRay: boolean
@@ -19,7 +19,7 @@ export const QuestionCard = ({
   onAnswerSelect,
   onNext,
   onToggleXRay
-}: QuestionCardProps) => {
+}: TQuestionCardProps) => {
   const getOptionStyle = (index: number) => {
     // Show correct answer when X-Ray is active (but not answered yet)
     if (showXRay && !showExplanation && index === question.correctAnswer) {

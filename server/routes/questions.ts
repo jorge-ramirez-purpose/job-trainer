@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
-import { Question } from '../../shared/types';
+import { TQuestion } from '../../shared/types';
 
-export function createQuestionsRouter(questions: Question[]) {
+export function createQuestionsRouter(questions: TQuestion[]) {
   const router = Router();
 
   router.get('/', (req: Request, res: Response) => {

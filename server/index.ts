@@ -3,13 +3,13 @@ import cors from 'cors';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { Question } from '../shared/types';
+import { TQuestion } from '../shared/types';
 import { createQuestionsRouter } from './routes/questions';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const questions: Question[] = JSON.parse(
+const questions: TQuestion[] = JSON.parse(
   readFileSync(join(__dirname, 'data', 'questions.json'), 'utf-8')
 );
 

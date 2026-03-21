@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Question, QuizState } from '../types/Question'
+import { TQuestion, TQuizState } from '../types/Question'
 
 export const useQuiz = () => {
-  const [questions, setQuestions] = useState<Question[]>([])
+  const [questions, setQuestions] = useState<TQuestion[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [quizState, setQuizState] = useState<QuizState>({
+  const [quizState, setQuizState] = useState<TQuizState>({
     currentQuestion: 0,
     answers: {},
     showExplanation: false,

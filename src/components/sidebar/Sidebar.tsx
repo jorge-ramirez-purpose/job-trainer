@@ -1,9 +1,9 @@
-interface SidebarProps {
+type TSidebarProps = {
   currentPhase: string
   currentMode: string
 }
 
-export const Sidebar = ({ currentPhase = 'React', currentMode = 'Quiz' }: SidebarProps) => {
+export const Sidebar = ({ currentPhase = 'React', currentMode = 'Quiz' }: TSidebarProps) => {
   const phases = [
     { name: 'JS core', progress: '20/20', color: 'bg-purple-500', active: false },
     { name: 'React', progress: '3/40', color: 'bg-emerald-500', active: currentPhase === 'React' },

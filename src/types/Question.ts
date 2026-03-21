@@ -1,1 +1,1 @@
-export { Question, QuizState } from '../../shared/types';
+export type { TQuestion, TQuizState } from '../../shared/types';

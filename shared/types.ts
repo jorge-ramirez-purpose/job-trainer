@@ -1,4 +1,4 @@
-export interface Question {
+export type TQuestion = {
   id: string;
   category: string;
   tag: string;
@@ -10,7 +10,7 @@ export interface Question {
   explanation: string;
 }
 
-export interface QuizState {
+export type TQuizState = {
   currentQuestion: number;
   answers: Record<string, number>;
   showExplanation: boolean;
