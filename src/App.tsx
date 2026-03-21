@@ -13,15 +13,13 @@ const App = () => {
     nextQuestion,
     toggleMarkForReview,
     toggleXRay,
-    getStats,
+    stats,
     totalQuestions,
     loading,
     error,
     category,
     selectCategory
   } = useQuiz()
-
-  const stats = getStats()
   const title = category ? PHASE_TITLES[category] ?? category : 'All phases'
 
   if (loading) {

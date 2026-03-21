@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { TQuestion, TQuizState } from '../types/Question'
 
 const STORAGE_KEY = 'quiz-progress'
@@ -81,57 +81,55 @@ export const useQuiz = () => {
 
   const currentQuestion = questions[quizState.currentQuestion]
 
-  const selectAnswer = (answerIndex: number) => {
-    const alreadyAnswered = quizState.showExplanation
-    if (alreadyAnswered) return
-
-    setQuizState(prev => ({
-      ...prev,
-      selectedAnswer: answerIndex,
-      showExplanation: true,
-      answers: {
-        ...prev.answers,
-        [currentQuestion.id]: answerIndex
+  const selectAnswer = useCallback((answerIndex: number) => {
+    setQuizState(prev => {
+      if (prev.showExplanation) return prev
+      const current = questions[prev.currentQuestion]
+      if (!current) return prev
+      return {
+        ...prev,
+        selectedAnswer: answerIndex,
+        showExplanation: true,
+        answers: { ...prev.answers, [current.id]: answerIndex }
       }
-    }))
-  }
+    })
+  }, [questions])
 
-  const nextQuestion = () => {
-    const hasMoreQuestions = quizState.currentQuestion < questions.length - 1
-    if (hasMoreQuestions) {
-      setQuizState(prev => ({
+  const nextQuestion = useCallback(() => {
+    setQuizState(prev => {
+      const hasMoreQuestions = prev.currentQuestion < questions.length - 1
+      if (!hasMoreQuestions) return prev
+      return {
         ...prev,
         currentQuestion: prev.currentQuestion + 1,
         showExplanation: false,
         selectedAnswer: null,
         showXRay: false
-      }))
-    }
-  }
+      }
+    })
+  }, [questions.length])
 
-  const toggleMarkForReview = () => {
-    if (!currentQuestion) return
+  const toggleMarkForReview = useCallback(() => {
     setQuizState(prev => {
-      const isMarked = prev.markedForReview.includes(currentQuestion.id)
+      const current = questions[prev.currentQuestion]
+      if (!current) return prev
+      const isMarked = prev.markedForReview.includes(current.id)
       const markedForReview = isMarked
-        ? prev.markedForReview.filter(id => id !== currentQuestion.id)
-        : [...prev.markedForReview, currentQuestion.id]
+        ? prev.markedForReview.filter(id => id !== current.id)
+        : [...prev.markedForReview, current.id]
       return { ...prev, markedForReview }
     })
-  }
+  }, [questions])
 
-  const toggleXRay = () => {
-    setQuizState(prev => ({
-      ...prev,
-      showXRay: !prev.showXRay
-    }))
-  }
+  const toggleXRay = useCallback(() => {
+    setQuizState(prev => ({ ...prev, showXRay: !prev.showXRay }))
+  }, [])
 
   const selectCategory = useCallback((cat: string | null) => {
     setCategory(cat)
   }, [])
 
-  const getStats = () => {
+  const stats = useMemo(() => {
     const correct = Object.entries(quizState.answers).filter(
       ([questionId, answer]) => {
         const question = questions.find(q => q.id === questionId)
@@ -144,7 +142,7 @@ export const useQuiz = () => {
     const score = hasAnswered ? Math.round((correct / (correct + wrong)) * 100) : 0
 
     return { correct, wrong, score }
-  }
+  }, [quizState.answers, questions])
 
   return {
     quizState,
@@ -153,7 +151,7 @@ export const useQuiz = () => {
     nextQuestion,
     toggleMarkForReview,
     toggleXRay,
-    getStats,
+    stats,
     totalQuestions: questions.length,
     loading,
     error,
