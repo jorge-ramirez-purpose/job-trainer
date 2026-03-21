@@ -51,7 +51,8 @@ export const useQuiz = () => {
   const currentQuestion = questions[quizState.currentQuestion]
 
   const selectAnswer = (answerIndex: number) => {
-    if (quizState.showExplanation) return
+    const alreadyAnswered = quizState.showExplanation
+    if (alreadyAnswered) return
 
     setQuizState(prev => ({
       ...prev,
@@ -65,7 +66,8 @@ export const useQuiz = () => {
   }
 
   const nextQuestion = () => {
-    if (quizState.currentQuestion < questions.length - 1) {
+    const hasMoreQuestions = quizState.currentQuestion < questions.length - 1
+    if (hasMoreQuestions) {
       setQuizState(prev => ({
         ...prev,
         currentQuestion: prev.currentQuestion + 1,
@@ -96,7 +98,8 @@ export const useQuiz = () => {
     ).length
 
     const wrong = Object.keys(quizState.answers).length - correct
-    const score = correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0
+    const hasAnswered = correct + wrong > 0
+    const score = hasAnswered ? Math.round((correct / (correct + wrong)) * 100) : 0
 
     return { correct, wrong, score }
   }

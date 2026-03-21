@@ -21,35 +21,44 @@ export const QuestionCard = ({
   onToggleXRay
 }: TProps) => {
   const getOptionStyle = (index: number) => {
-    // Show correct answer when X-Ray is active (but not answered yet)
-    if (showXRay && !showExplanation && index === question.correctAnswer) {
+    const isCorrectAnswer = index === question.correctAnswer
+    const isSelected = selectedAnswer === index
+    const isXRayReveal = showXRay && !showExplanation && isCorrectAnswer
+    const isWrongSelection = isSelected && !isCorrectAnswer
+
+    if (isXRayReveal) {
       return 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200'
     }
-    
+
     if (!showExplanation) {
-      return selectedAnswer === index 
+      return isSelected
         ? 'border-indigo-500 bg-indigo-50 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-200 dark:border-indigo-400'
         : 'border-gray-300 bg-white text-gray-600 hover:border-gray-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:border-gray-500'
     }
-    
-    if (index === question.correctAnswer) {
+
+    if (isCorrectAnswer) {
       return 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200'
     }
-    
-    if (selectedAnswer === index && index !== question.correctAnswer) {
+
+    if (isWrongSelection) {
       return 'border-red-600 bg-red-50 text-red-800 dark:bg-red-900/50 dark:text-red-200'
     }
-    
+
     return 'border-gray-300 bg-white text-gray-600 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300'
   }
+
+  const isPredictOutput = question.type === 'predict-output'
+  const canShowXRayToggle = isPredictOutput && !showExplanation
+  const shouldShowExplanation = showExplanation || showXRay
+  const hasCode = Boolean(question.code)
 
   return (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-3">
       <div className="flex items-center justify-between mb-2">
         <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-          {question.type === 'predict-output' ? 'Predict the output' : 'Multiple choice'}
+          {isPredictOutput ? 'Predict the output' : 'Multiple choice'}
         </div>
-        {question.type === 'predict-output' && !showExplanation && (
+        {canShowXRayToggle && (
           <button
             onClick={onToggleXRay}
             className={`text-xs px-2 py-1 rounded border transition-colors ${
@@ -67,8 +76,8 @@ export const QuestionCard = ({
         {question.question}
       </div>
       
-      {question.code && (
-        <CodeBlock code={question.code} language="javascript" />
+      {hasCode && (
+        <CodeBlock code={question.code!} language="javascript" />
       )}
 
       <div className="grid grid-cols-2 gap-2 mb-3">
@@ -84,7 +93,7 @@ export const QuestionCard = ({
         ))}
       </div>
 
-      {(showExplanation || showXRay) && (
+      {shouldShowExplanation && (
         <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-800 leading-relaxed mb-3 dark:bg-emerald-900/50 dark:border-emerald-600 dark:text-emerald-200">
           <strong>Why:</strong> {question.explanation}
         </div>

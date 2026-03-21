@@ -6,6 +6,7 @@ type TProps = {
 
 export const StatsRow = ({ correct, wrong, score }: TProps) => {
   const total = correct + wrong
+  const hasAnswered = total > 0
 
   return (
     <div className="grid grid-cols-3 gap-2 mb-3">
@@ -15,7 +16,7 @@ export const StatsRow = ({ correct, wrong, score }: TProps) => {
         <div className="h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-1.5">
           <div 
             className="h-full bg-emerald-500 rounded-full transition-all duration-300" 
-            style={{ width: total > 0 ? `${(correct / total) * 100}%` : '0%' }}
+            style={{ width: hasAnswered ? `${(correct / total) * 100}%` : '0%' }}
           />
         </div>
       </div>
@@ -26,7 +27,7 @@ export const StatsRow = ({ correct, wrong, score }: TProps) => {
         <div className="h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-1.5">
           <div 
             className="h-full bg-red-500 rounded-full transition-all duration-300" 
-            style={{ width: total > 0 ? `${(wrong / total) * 100}%` : '0%' }}
+            style={{ width: hasAnswered ? `${(wrong / total) * 100}%` : '0%' }}
           />
         </div>
       </div>
