@@ -317,5 +317,228 @@
     ],
     "correctAnswer": 1,
     "explanation": "Using the updater function setTodos(prev => [...prev, newTodo]) ensures you always work with the latest state, avoiding stale closure issues."
+  },
+  {
+    "id": "q21",
+    "category": "JavaScript",
+    "tag": "event loop",
+    "type": "predict-output",
+    "question": "What is the order of the logs?",
+    "code": "console.log('1');\n\nsetTimeout(() => {\n  console.log('2');\n}, 0);\n\nPromise.resolve().then(() => {\n  console.log('3');\n});\n\nconsole.log('4');",
+    "options": [
+      "1, 4, 3, 2",
+      "1, 2, 3, 4",
+      "1, 4, 2, 3",
+      "1, 3, 4, 2"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Synchronous code runs first (1, 4). Then the microtask queue is drained — Promise.then callbacks are microtasks, so 3 logs next. Finally the macrotask queue runs the setTimeout callback, logging 2."
+  },
+  {
+    "id": "q22",
+    "category": "JavaScript",
+    "tag": "event loop",
+    "type": "predict-output",
+    "question": "What is the order of the logs?",
+    "code": "setTimeout(() => console.log('A'), 0);\n\nPromise.resolve()\n  .then(() => {\n    console.log('B');\n    setTimeout(() => console.log('C'), 0);\n  })\n  .then(() => console.log('D'));\n\nconsole.log('E');",
+    "options": [
+      "E, B, D, A, C",
+      "E, A, B, D, C",
+      "E, B, A, D, C",
+      "A, E, B, D, C"
+    ],
+    "correctAnswer": 0,
+    "explanation": "E logs synchronously. The microtask queue then runs: B logs, a new setTimeout is scheduled, and the chained .then queues D as a microtask. D runs before any macrotask. Finally the macrotask queue drains: A (scheduled first) then C."
+  },
+  {
+    "id": "q23",
+    "category": "JavaScript",
+    "tag": "promises",
+    "type": "predict-output",
+    "question": "What does this code log?",
+    "code": "Promise.all([\n  Promise.resolve(1),\n  Promise.reject('error'),\n  Promise.resolve(3)\n])\n  .then(values => console.log(values))\n  .catch(err => console.log(err));",
+    "options": [
+      "\"error\"",
+      "[1, \"error\", 3]",
+      "[1, undefined, 3]",
+      "Uncaught promise rejection"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Promise.all short-circuits on the first rejection. It doesn't wait for the other promises — it immediately rejects with the first error value. The .catch handler receives \"error\"."
+  },
+  {
+    "id": "q24",
+    "category": "JavaScript",
+    "tag": "promises",
+    "type": "predict-output",
+    "question": "What does the final .then receive?",
+    "code": "Promise.resolve(1)\n  .then(val => val + 1)\n  .then(val => { val + 1 })\n  .then(val => console.log(val));",
+    "options": [
+      "undefined",
+      "3",
+      "2",
+      "NaN"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The second .then uses curly braces without a return statement — { val + 1 } is a block body that implicitly returns undefined. The missing return is a common bug. Use either an arrow (val => val + 1) or an explicit return."
+  },
+  {
+    "id": "q25",
+    "category": "JavaScript",
+    "tag": "async/await",
+    "type": "predict-output",
+    "question": "What does this code log?",
+    "code": "async function fetchData() {\n  try {\n    const result = await Promise.reject('fail');\n    console.log('result:', result);\n  } catch (err) {\n    console.log('caught:', err);\n  }\n  console.log('done');\n}\n\nfetchData();",
+    "options": [
+      "\"caught: fail\" then \"done\"",
+      "\"result: fail\" then \"done\"",
+      "\"caught: fail\" only",
+      "Uncaught promise rejection"
+    ],
+    "correctAnswer": 0,
+    "explanation": "await on a rejected promise throws into the catch block, logging \"caught: fail\". Execution continues after the try/catch, so \"done\" also logs. The catch doesn't stop the rest of the function."
+  },
+  {
+    "id": "q26",
+    "category": "JavaScript",
+    "tag": "async/await",
+    "type": "predict-output",
+    "question": "How long does this take to complete?",
+    "code": "function delay(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\nasync function run() {\n  const a = delay(1000);\n  const b = delay(1000);\n  await a;\n  await b;\n  console.log('done');\n}\n\nrun();",
+    "options": [
+      "~1 second",
+      "~2 seconds",
+      "~0 seconds",
+      "It never resolves"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Both promises are created before either is awaited, so their timers start in parallel. By the time the first await resolves after 1 second, the second promise has also resolved. Total: ~1 second. Compare to awaiting each call sequentially, which would take ~2 seconds."
+  },
+  {
+    "id": "q27",
+    "category": "JavaScript",
+    "tag": "prototypes",
+    "type": "predict-output",
+    "question": "What does this code log?",
+    "code": "const animal = { type: 'animal', speak() { return this.type; } };\nconst dog = Object.create(animal);\ndog.type = 'dog';\n\nconsole.log(dog.speak());\nconsole.log(dog.hasOwnProperty('speak'));\nconsole.log(dog.hasOwnProperty('type'));",
+    "options": [
+      "\"dog\", false, true",
+      "\"animal\", false, true",
+      "\"dog\", true, true",
+      "\"animal\", true, false"
+    ],
+    "correctAnswer": 0,
+    "explanation": "dog inherits speak from animal via the prototype chain, but this still refers to dog, so speak() returns \"dog\". speak is not dog's own property (it's inherited), but type is (it was assigned directly to dog)."
+  },
+  {
+    "id": "q28",
+    "category": "JavaScript",
+    "tag": "prototypes",
+    "type": "multiple-choice",
+    "question": "What is the key difference between Object.create(proto) and class extends?",
+    "options": [
+      "Object.create sets the prototype directly; class extends also runs the parent constructor",
+      "Object.create copies properties; class extends links prototypes",
+      "Object.create is synchronous; class extends is asynchronous",
+      "There is no difference — they produce identical objects"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Object.create(proto) creates a new object with proto as its prototype but doesn't call any constructor. Class extends sets up the prototype chain AND requires calling super() which invokes the parent constructor, initializing inherited instance properties."
+  },
+  {
+    "id": "q29",
+    "category": "JavaScript",
+    "tag": "this keyword",
+    "type": "predict-output",
+    "question": "What does each log output?",
+    "code": "const obj = {\n  name: 'obj',\n  regular: function() { return this.name; },\n  arrow: () => { return this.name; }\n};\n\nconsole.log(obj.regular());\nconsole.log(obj.arrow());",
+    "options": [
+      "\"obj\", undefined",
+      "\"obj\", \"obj\"",
+      "undefined, undefined",
+      "undefined, \"obj\""
+    ],
+    "correctAnswer": 0,
+    "explanation": "regular() is called as a method on obj, so this is obj and this.name is \"obj\". Arrow functions don't have their own this — they capture it from the enclosing scope (module/global), where this.name is undefined."
+  },
+  {
+    "id": "q30",
+    "category": "JavaScript",
+    "tag": "this keyword",
+    "type": "predict-output",
+    "question": "What does the extracted method log?",
+    "code": "class User {\n  constructor(name) { this.name = name; }\n  greet() { console.log(`Hi, ${this.name}`); }\n}\n\nconst user = new User('Alice');\nconst greet = user.greet;\ngreet();",
+    "options": [
+      "\"Hi, undefined\"",
+      "\"Hi, Alice\"",
+      "TypeError: Cannot read properties",
+      "\"Hi, \""
+    ],
+    "correctAnswer": 0,
+    "explanation": "Extracting a method from an object loses the this binding. When greet() is called without an object, this is undefined in strict mode (classes are always strict). this.name is undefined, so it logs \"Hi, undefined\". Fix: use greet.bind(user) or an arrow function."
+  },
+  {
+    "id": "q31",
+    "category": "JavaScript",
+    "tag": "coercion",
+    "type": "predict-output",
+    "question": "What does each comparison evaluate to?",
+    "code": "console.log(0 == false);\nconsole.log('' == false);\nconsole.log(null == undefined);\nconsole.log(null == 0);",
+    "options": [
+      "true, true, true, false",
+      "true, true, true, true",
+      "false, false, true, false",
+      "true, false, true, false"
+    ],
+    "correctAnswer": 0,
+    "explanation": "== coerces types: 0 and false both coerce to 0, '' and false both coerce to 0, null and undefined are loosely equal to each other (special rule). But null is NOT coerced to 0 — null == 0 is false. This is why === is preferred."
+  },
+  {
+    "id": "q32",
+    "category": "JavaScript",
+    "tag": "coercion",
+    "type": "predict-output",
+    "question": "What does each expression evaluate to?",
+    "code": "console.log(1 + '2');\nconsole.log('3' - 1);\nconsole.log('3' + 1);\nconsole.log(true + true);",
+    "options": [
+      "\"12\", 2, \"31\", 2",
+      "3, 2, 4, 2",
+      "\"12\", \"31\", \"31\", \"truetrue\"",
+      "3, 2, \"31\", NaN"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The + operator prefers string concatenation when either operand is a string: 1 + '2' = '12', '3' + 1 = '31'. The - operator only does math: '3' - 1 = 2. Booleans coerce to numbers with +: true + true = 2."
+  },
+  {
+    "id": "q33",
+    "category": "JavaScript",
+    "tag": "scope",
+    "type": "predict-output",
+    "question": "What does this code log?",
+    "code": "let x = 1;\n\nfunction foo() {\n  console.log(x);\n  let x = 2;\n}\n\nfoo();",
+    "options": [
+      "ReferenceError: Cannot access 'x' before initialization",
+      "undefined",
+      "1",
+      "2"
+    ],
+    "correctAnswer": 0,
+    "explanation": "let declarations are hoisted but not initialized — accessing them before the declaration line throws a ReferenceError. This is the temporal dead zone (TDZ). The inner let x shadows the outer x from the start of the function scope, but it can't be read until the let x = 2 line executes."
+  },
+  {
+    "id": "q34",
+    "category": "JavaScript",
+    "tag": "scope",
+    "type": "multiple-choice",
+    "question": "Which statement about var hoisting is correct?",
+    "code": "console.log(a);\nconsole.log(b);\nvar a = 1;\nlet b = 2;",
+    "options": [
+      "a logs undefined, b throws ReferenceError",
+      "Both log undefined",
+      "Both throw ReferenceError",
+      "a throws ReferenceError, b logs undefined"
+    ],
+    "correctAnswer": 0,
+    "explanation": "var declarations are hoisted AND initialized to undefined, so console.log(a) logs undefined. let declarations are hoisted but NOT initialized — they sit in the temporal dead zone until the declaration is reached, so accessing b throws a ReferenceError."
   }
 ]
