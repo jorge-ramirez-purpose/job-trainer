@@ -1,10 +1,10 @@
-type TStatsRowProps = {
+type TProps = {
   correct: number
   wrong: number
   score: number
 }
 
-export const StatsRow = ({ correct, wrong, score }: TStatsRowProps) => {
+export const StatsRow = ({ correct, wrong, score }: TProps) => {
   const total = correct + wrong
 
   return (

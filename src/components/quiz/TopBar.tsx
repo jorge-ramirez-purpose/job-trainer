@@ -1,11 +1,11 @@
-type TTopBarProps = {
+type TProps = {
   title: string
   tag: string
   currentQuestion: number
   totalQuestions: number
 }
 
-export const TopBar = ({ title, tag, currentQuestion, totalQuestions }: TTopBarProps) => {
+export const TopBar = ({ title, tag, currentQuestion, totalQuestions }: TProps) => {
   return (
     <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2.5 flex items-center gap-2.5">
       <div className="text-sm font-medium text-gray-900 dark:text-gray-100 flex-1">

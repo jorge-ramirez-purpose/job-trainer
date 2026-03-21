@@ -1,4 +1,4 @@
-type TSidebarProps = {
+type TProps = {
   currentPhase: string | null
   currentMode: string
   onPhaseSelect: (phase: string | null) => void
@@ -12,7 +12,7 @@ const PHASES = [
   { name: 'HTML/CSS & SQL', category: 'HTML/CSS & SQL', progress: '12/12', color: 'bg-blue-500' }
 ]
 
-export const Sidebar = ({ currentPhase, currentMode = 'Quiz', onPhaseSelect }: TSidebarProps) => {
+export const Sidebar = ({ currentPhase, currentMode = 'Quiz', onPhaseSelect }: TProps) => {
   const modes = [
     { name: 'Quiz', active: currentMode === 'Quiz' },
     { name: 'Flashcards', active: currentMode === 'Flashcards' },

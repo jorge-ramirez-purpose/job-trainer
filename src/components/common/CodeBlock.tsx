@@ -6,13 +6,13 @@ import 'prismjs/components/prism-typescript'
 import 'prismjs/components/prism-tsx'
 import '../../styles/prism-custom.css'
 
-type TCodeBlockProps = {
+type TProps = {
   code: string
   language?: string
   className?: string
 }
 
-export const CodeBlock = ({ code, language = 'javascript', className = '' }: TCodeBlockProps) => {
+export const CodeBlock = ({ code, language = 'javascript', className = '' }: TProps) => {
   useEffect(() => {
     Prism.highlightAll()
   }, [code])

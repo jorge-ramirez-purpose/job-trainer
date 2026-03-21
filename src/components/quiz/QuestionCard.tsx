@@ -1,7 +1,7 @@
 import { TQuestion } from '../../types/Question'
 import { CodeBlock } from '../common/CodeBlock'
 
-type TQuestionCardProps = {
+type TProps = {
   question: TQuestion
   selectedAnswer: number | null
   showExplanation: boolean
@@ -19,7 +19,7 @@ export const QuestionCard = ({
   onAnswerSelect,
   onNext,
   onToggleXRay
-}: TQuestionCardProps) => {
+}: TProps) => {
   const getOptionStyle = (index: number) => {
     // Show correct answer when X-Ray is active (but not answered yet)
     if (showXRay && !showExplanation && index === question.correctAnswer) {
