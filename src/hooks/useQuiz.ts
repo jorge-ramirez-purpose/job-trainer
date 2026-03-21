@@ -1,26 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { TQuestion, TQuizState } from '../types/Question'
-
-const STORAGE_KEY = 'quiz-progress'
-
-type TPersistedProgress = {
-  answers: Record<string, number>
-  markedForReview: string[]
-}
-
-const loadProgress = (): TPersistedProgress => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { answers: {}, markedForReview: [] }
-    return JSON.parse(raw)
-  } catch {
-    return { answers: {}, markedForReview: [] }
-  }
-}
-
-const saveProgress = (progress: TPersistedProgress) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress))
-}
+import { loadProgress, saveProgress } from './useProgress'
 
 export const useQuiz = (
   category: string | null,
