@@ -1,0 +1,113 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.app-frame { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; background: var(--color-background-secondary); }
+.sidebar { width: 200px; border-right: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); padding: 14px 0; flex-shrink: 0; }
+.sidebar-logo { padding: 0 14px 12px; font-size: 13px; font-weight: 500; color: var(--color-text-primary); border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 8px; }
+.sidebar-logo span { font-size: 11px; font-weight: 400; color: var(--color-text-tertiary); display: block; margin-top: 1px; }
+.nav-section { padding: 0 8px; margin-bottom: 16px; }
+.nav-label { font-size: 10px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 0 6px; margin-bottom: 4px; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: 6px; font-size: 12px; color: var(--color-text-secondary); cursor: pointer; }
+.nav-item.active { background: var(--color-background-secondary); color: var(--color-text-primary); font-weight: 500; }
+.nav-item .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.nav-progress { margin-left: auto; font-size: 10px; color: var(--color-text-tertiary); }
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.topbar { background: var(--color-background-primary); border-bottom: 0.5px solid var(--color-border-tertiary); padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+.topbar-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.badge-sm { font-size: 10px; padding: 2px 8px; border-radius: 99px; border: 0.5px solid; }
+.badge-purple { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
+.badge-amber { background: #FAEEDA; color: #633806; border-color: #EF9F27; }
+.badge-teal { background: #E1F5EE; color: #085041; border-color: #5DCAA5; }
+.badge-gray { background: var(--color-background-secondary); color: var(--color-text-secondary); border-color: var(--color-border-secondary); }
+.content { padding: 16px; flex: 1; }
+.question-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px 16px; margin-bottom: 12px; }
+.q-label { font-size: 10px; color: var(--color-text-tertiary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+.q-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.55; margin-bottom: 12px; }
+.code-block { background: var(--color-background-tertiary); border-radius: 6px; padding: 10px 12px; font-family: var(--font-mono); font-size: 11px; color: var(--color-text-primary); line-height: 1.6; margin-bottom: 12px; border: 0.5px solid var(--color-border-tertiary); }
+.kw { color: #7F77DD; } .fn { color: #1D9E75; } .str { color: #BA7517; } .cm { color: var(--color-text-tertiary); }
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.option { border: 0.5px solid var(--color-border-secondary); border-radius: 8px; padding: 8px 10px; font-size: 12px; color: var(--color-text-secondary); cursor: pointer; font-family: var(--font-mono); background: var(--color-background-primary); }
+.option.selected { border-color: #534AB7; background: #EEEDFE; color: #3C3489; }
+.option.correct { border-color: #0F6E56; background: #E1F5EE; color: #085041; }
+.option.wrong { border-color: #993C1D; background: #FAECE7; color: #4A1B0C; }
+.explain-box { background: #E1F5EE; border: 0.5px solid #5DCAA5; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #085041; line-height: 1.55; margin-bottom: 12px; }
+.action-row { display: flex; align-items: center; gap: 8px; }
+.btn { font-size: 12px; padding: 6px 14px; border-radius: 6px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; }
+.btn-primary { background: var(--color-text-primary); color: var(--color-background-primary); border-color: transparent; }
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+.stat { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 8px; padding: 10px 12px; }
+.stat-val { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.stat-lbl { font-size: 10px; color: var(--color-text-tertiary); margin-top: 2px; }
+.prog-bar { height: 3px; background: var(--color-border-tertiary); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+.prog-fill { height: 100%; border-radius: 99px; }
+@media (prefers-color-scheme: dark) {
+  .badge-purple { background: #26215C; color: #CECBF6; border-color: #534AB7; }
+  .badge-amber { background: #412402; color: #FAC775; border-color: #854F0B; }
+  .badge-teal { background: #04342C; color: #9FE1CB; border-color: #0F6E56; }
+  .kw { color: #AFA9EC; } .fn { color: #5DCAA5; } .str { color: #FAC775; }
+  .option.selected { background: #26215C; color: #CECBF6; border-color: #7F77DD; }
+  .option.correct { background: #04342C; color: #9FE1CB; border-color: #1D9E75; }
+  .option.wrong { background: #4A1B0C; color: #F5C4B3; border-color: #D85A30; }
+  .explain-box { background: #04342C; border-color: #1D9E75; color: #9FE1CB; }
+}
+</style>
+
+<div class="app-frame" style="display: flex; height: 480px; font-size: 13px;">
+  <div class="sidebar">
+    <div class="sidebar-logo">Interview prep <span>frontend · jorge</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Phases</div>
+      <div class="nav-item"><div class="dot" style="background:#7F77DD"></div>JS core<span class="nav-progress">12/20</span></div>
+      <div class="nav-item active"><div class="dot" style="background:#1D9E75"></div>React<span class="nav-progress">3/40</span></div>
+      <div class="nav-item"><div class="dot" style="background:#BA7517"></div>TypeScript<span class="nav-progress">0/24</span></div>
+      <div class="nav-item"><div class="dot" style="background:#D85A30"></div>Patterns<span class="nav-progress">0/16</span></div>
+      <div class="nav-item"><div class="dot" style="background:#378ADD"></div>HTML/CSS & SQL<span class="nav-progress">0/12</span></div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Mode</div>
+      <div class="nav-item active">Quiz</div>
+      <div class="nav-item">Flashcards</div>
+      <div class="nav-item">Review wrongs</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">React core mechanics</div>
+      <span class="badge-purple">useState & batching</span>
+      <span class="badge-gray">Q 3 / 40</span>
+    </div>
+    <div class="content" style="overflow-y: auto;">
+      <div class="stats-row">
+        <div class="stat"><div class="stat-val">2</div><div class="stat-lbl">Correct</div><div class="prog-bar"><div class="prog-fill" style="width:67%;background:#1D9E75"></div></div></div>
+        <div class="stat"><div class="stat-val">1</div><div class="stat-lbl">Wrong</div><div class="prog-bar"><div class="prog-fill" style="width:33%;background:#D85A30"></div></div></div>
+        <div class="stat"><div class="stat-val">67%</div><div class="stat-lbl">Score</div><div class="prog-bar"><div class="prog-fill" style="width:67%;background:#7F77DD"></div></div></div>
+      </div>
+
+      <div class="question-card">
+        <div class="q-label">Predict the output</div>
+        <div class="q-text">What does the component log when the button is clicked 3 times quickly?</div>
+        <div class="code-block"><span class="kw">function</span> <span class="fn">Counter</span>() {<br>&nbsp;&nbsp;<span class="kw">const</span> [count, setCount] = useState(<span class="str">0</span>);<br><br>&nbsp;&nbsp;<span class="kw">const</span> <span class="fn">handleClick</span> = () =&gt; {<br>&nbsp;&nbsp;&nbsp;&nbsp;setCount(count + <span class="str">1</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;setCount(count + <span class="str">1</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;setCount(count + <span class="str">1</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;console.log(count);<br>&nbsp;&nbsp;};<br><br>&nbsp;&nbsp;<span class="cm">// renders: &lt;button onClick={handleClick}&gt;...&lt;/button&gt;</span><br>}</div>
+
+        <div class="options-grid">
+          <div class="option">Logs 3, count becomes 9</div>
+          <div class="option correct">Logs 0, count becomes 1</div>
+          <div class="option selected wrong">Logs 0, count becomes 3</div>
+          <div class="option">Logs 3, count becomes 3</div>
+        </div>
+
+        <div class="explain-box">
+          <strong>Why:</strong> <code>count</code> is captured as <code>0</code> in the closure when the handler runs. All three <code>setCount(count + 1)</code> calls see the same stale value — they all enqueue <code>setCount(1)</code>, not 3 separate increments. The log also captures the stale closure value, so it prints <code>0</code>. Fix: use the updater form <code>setCount(c =&gt; c + 1)</code>.
+        </div>
+
+        <div class="action-row">
+          <button class="btn">Mark for review</button>
+          <div style="flex:1"></div>
+          <button class="btn">Skip</button>
+          <button class="btn btn-primary">Next question →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
