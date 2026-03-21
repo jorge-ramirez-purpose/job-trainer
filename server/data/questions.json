@@ -946,5 +946,386 @@
     ],
     "correctAnswer": 0,
     "explanation": "React sees an <input> in the same position in both branches. Since the element type (input) and position haven't changed, React reuses the DOM node and just updates the placeholder. The typed text persists. Fix: add different key props to force React to treat them as distinct elements."
+  },
+  {
+    "id": "q61",
+    "category": "TypeScript",
+    "tag": "generics",
+    "type": "predict-output",
+    "question": "What type does result have?",
+    "code": "function identity<T>(value: T): T {\n  return value;\n}\n\nconst result = identity('hello');",
+    "options": [
+      "string",
+      "unknown",
+      "T",
+      "any"
+    ],
+    "correctAnswer": 0,
+    "explanation": "TypeScript infers the generic parameter T from the argument. Since 'hello' is a string, T is inferred as string, and the return type is string. No explicit type annotation needed."
+  },
+  {
+    "id": "q62",
+    "category": "TypeScript",
+    "tag": "generics",
+    "type": "predict-output",
+    "question": "Does this code compile?",
+    "code": "function getLength<T>(value: T): number {\n  return value.length;\n}",
+    "options": [
+      "No — T is unconstrained, so .length is not guaranteed",
+      "Yes — all values have a length property",
+      "Yes — TypeScript infers length from usage",
+      "No — generics cannot return number"
+    ],
+    "correctAnswer": 0,
+    "explanation": "T could be anything (number, boolean, etc.), and not all types have .length. Fix: constrain the generic with T extends { length: number } or T extends string | any[]."
+  },
+  {
+    "id": "q63",
+    "category": "TypeScript",
+    "tag": "generics",
+    "type": "predict-output",
+    "question": "What type does result have?",
+    "code": "function first<T>(arr: T[]): T | undefined {\n  return arr[0];\n}\n\nconst result = first([1, 2, 3]);",
+    "options": [
+      "number | undefined",
+      "number",
+      "number[]",
+      "any"
+    ],
+    "correctAnswer": 0,
+    "explanation": "TypeScript infers T as number from the array [1, 2, 3]. The return type is T | undefined, so result is number | undefined. The undefined accounts for empty arrays."
+  },
+  {
+    "id": "q64",
+    "category": "TypeScript",
+    "tag": "generics",
+    "type": "multiple-choice",
+    "question": "What does the extends keyword do in a generic constraint?",
+    "code": "function merge<T extends object, U extends object>(a: T, b: U): T & U {\n  return { ...a, ...b };\n}",
+    "options": [
+      "Restricts T and U to be objects — non-objects cause a compile error",
+      "Makes T and U inherit from object at runtime",
+      "Creates a class hierarchy between T and U",
+      "Ensures T and U are the same type"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In generics, extends acts as a constraint, not inheritance. T extends object means T must be assignable to object — primitives like string or number are rejected at compile time. The return type T & U is an intersection of both."
+  },
+  {
+    "id": "q65",
+    "category": "TypeScript",
+    "tag": "utility types",
+    "type": "predict-output",
+    "question": "Does this code compile?",
+    "code": "type TUser = {\n  name: string;\n  email: string;\n  age: number;\n};\n\nconst update: Partial<TUser> = { name: 'Alice' };",
+    "options": [
+      "Yes — Partial makes all properties optional",
+      "No — email and age are missing",
+      "Yes — but update has type any",
+      "No — Partial only works with interfaces"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Partial<T> makes every property of T optional. So Partial<TUser> is { name?: string; email?: string; age?: number }. Providing just { name: 'Alice' } is valid."
+  },
+  {
+    "id": "q66",
+    "category": "TypeScript",
+    "tag": "utility types",
+    "type": "predict-output",
+    "question": "Does this code compile?",
+    "code": "type TUser = {\n  name: string;\n  email: string;\n  age: number;\n};\n\nconst user: Required<Partial<TUser>> = { name: 'Alice' };",
+    "options": [
+      "No — Required undoes Partial, all properties are required again",
+      "Yes — Partial makes them optional, Required has no effect after",
+      "Yes — the intersection cancels out",
+      "No — Required and Partial cannot be combined"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Required<T> makes all properties required (removes the ? modifier). Applying Required after Partial reverses the effect — you're back to the original type where name, email, and age are all required. Missing email and age causes a compile error."
+  },
+  {
+    "id": "q67",
+    "category": "TypeScript",
+    "tag": "utility types",
+    "type": "predict-output",
+    "question": "What type does result have?",
+    "code": "type TUser = {\n  id: number;\n  name: string;\n  email: string;\n  password: string;\n};\n\ntype TPublicUser = Omit<TUser, 'password' | 'email'>;\n\nconst result: TPublicUser = { id: 1, name: 'Alice' };",
+    "options": [
+      "{ id: number; name: string }",
+      "{ password: string; email: string }",
+      "TUser",
+      "{ id: number; name: string; email: string; password: string }"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Omit<T, K> creates a type with all properties of T except those in K. Omitting 'password' and 'email' from TUser leaves { id: number; name: string }."
+  },
+  {
+    "id": "q68",
+    "category": "TypeScript",
+    "tag": "utility types",
+    "type": "multiple-choice",
+    "question": "What is the difference between Pick and Omit?",
+    "options": [
+      "Pick selects which keys to keep; Omit selects which keys to remove",
+      "Pick works on types; Omit works on interfaces",
+      "Pick creates a subset; Omit creates a superset",
+      "Pick is for objects; Omit is for arrays"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Pick<T, K> creates a type with only the specified keys from T. Omit<T, K> creates a type with all keys except the specified ones. They are complementary — Pick<TUser, 'id' | 'name'> equals Omit<TUser, 'email' | 'password'>."
+  },
+  {
+    "id": "q69",
+    "category": "TypeScript",
+    "tag": "narrowing",
+    "type": "predict-output",
+    "question": "Does this code compile?",
+    "code": "function process(value: string | number) {\n  if (typeof value === 'string') {\n    return value.toUpperCase();\n  }\n  return value.toFixed(2);\n}",
+    "options": [
+      "Yes — typeof narrows the type in each branch",
+      "No — toUpperCase doesn't exist on string | number",
+      "No — toFixed doesn't exist on string | number",
+      "Yes — but only with strict mode off"
+    ],
+    "correctAnswer": 0,
+    "explanation": "TypeScript understands typeof checks and narrows the type accordingly. Inside the if block, value is narrowed to string (so .toUpperCase() is valid). After the if, value must be number (so .toFixed(2) is valid)."
+  },
+  {
+    "id": "q70",
+    "category": "TypeScript",
+    "tag": "narrowing",
+    "type": "predict-output",
+    "question": "Does this code compile?",
+    "code": "function printLength(value: string | string[] | null) {\n  if (value) {\n    console.log(value.length);\n  }\n}",
+    "options": [
+      "Yes — truthiness check narrows out null, both string and string[] have .length",
+      "No — null could still leak through",
+      "No — string[] doesn't have .length",
+      "Yes — but value.length is always 0"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The truthiness check if (value) eliminates null (and empty string, though that's a subtle edge case). Both string and string[] have a .length property, so the access is valid inside the block."
+  },
+  {
+    "id": "q71",
+    "category": "TypeScript",
+    "tag": "narrowing",
+    "type": "multiple-choice",
+    "question": "Which narrowing technique works for custom object types?",
+    "code": "type TDog = { kind: 'dog'; bark(): void };\ntype TCat = { kind: 'cat'; meow(): void };\ntype TPet = TDog | TCat;",
+    "options": [
+      "Check the discriminant property: if (pet.kind === 'dog')",
+      "Use typeof: if (typeof pet === 'dog')",
+      "Use instanceof: if (pet instanceof Dog)",
+      "Use JSON.stringify comparison"
+    ],
+    "correctAnswer": 0,
+    "explanation": "typeof only works for primitives (string, number, etc.), and instanceof only for classes. For discriminated unions with a literal type property (kind), checking that property narrows the type. TypeScript understands that if kind is 'dog', the type is TDog."
+  },
+  {
+    "id": "q72",
+    "category": "TypeScript",
+    "tag": "discriminated unions",
+    "type": "predict-output",
+    "question": "Does this code compile?",
+    "code": "type TSuccess = { status: 'success'; data: string };\ntype TError = { status: 'error'; message: string };\ntype TResult = TSuccess | TError;\n\nfunction handle(result: TResult) {\n  if (result.status === 'success') {\n    console.log(result.data);\n  } else {\n    console.log(result.message);\n  }\n}",
+    "options": [
+      "Yes — status discriminates the union, narrowing each branch",
+      "No — data doesn't exist on TResult",
+      "No — message doesn't exist on TResult",
+      "Yes — but only with type assertions"
+    ],
+    "correctAnswer": 0,
+    "explanation": "status is the discriminant property with literal types 'success' and 'error'. Checking result.status narrows the type: in the if branch result is TSuccess (has .data), in the else branch it's TError (has .message)."
+  },
+  {
+    "id": "q73",
+    "category": "TypeScript",
+    "tag": "discriminated unions",
+    "type": "predict-output",
+    "question": "What does TypeScript report about this switch statement?",
+    "code": "type TShape =\n  | { kind: 'circle'; radius: number }\n  | { kind: 'square'; side: number }\n  | { kind: 'triangle'; base: number; height: number };\n\nfunction area(shape: TShape): number {\n  switch (shape.kind) {\n    case 'circle':\n      return Math.PI * shape.radius ** 2;\n    case 'square':\n      return shape.side ** 2;\n  }\n}",
+    "options": [
+      "Error — function doesn't return a value for 'triangle'",
+      "Compiles fine — missing cases return undefined",
+      "Error — switch must have a default case",
+      "Compiles fine — TypeScript ignores exhaustiveness"
+    ],
+    "correctAnswer": 0,
+    "explanation": "With a return type annotation of number, TypeScript checks that all code paths return a value. The 'triangle' case is unhandled, so the function could fall through without returning. TypeScript flags this as an error."
+  },
+  {
+    "id": "q74",
+    "category": "TypeScript",
+    "tag": "discriminated unions",
+    "type": "multiple-choice",
+    "question": "How do you ensure exhaustive handling of a discriminated union?",
+    "options": [
+      "Add a default case that assigns to never: const _: never = shape",
+      "Use a try/catch block",
+      "Add an else clause that throws",
+      "Use Object.keys to check all variants"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Assigning the unhandled value to a variable of type never causes a compile error if any variant is not covered. If you later add a new variant to the union, the never assignment will fail, forcing you to handle it. This is the exhaustive check pattern."
+  },
+  {
+    "id": "q75",
+    "category": "TypeScript",
+    "tag": "type guards",
+    "type": "predict-output",
+    "question": "Does TypeScript narrow the type inside the if block?",
+    "code": "function isString(value: unknown): value is string {\n  return typeof value === 'string';\n}\n\nfunction process(input: unknown) {\n  if (isString(input)) {\n    console.log(input.toUpperCase());\n  }\n}",
+    "options": [
+      "Yes — 'value is string' is a type predicate that narrows input to string",
+      "No — custom functions can't narrow types",
+      "Yes — but only because of the typeof check",
+      "No — unknown can't be narrowed"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The 'value is string' return type is a type predicate. When the function returns true, TypeScript narrows the argument's type to string in the calling scope. Without the predicate, TypeScript wouldn't know the function performs narrowing."
+  },
+  {
+    "id": "q76",
+    "category": "TypeScript",
+    "tag": "type guards",
+    "type": "predict-output",
+    "question": "What is the type of value after the assertion?",
+    "code": "function assertDefined<T>(value: T | null | undefined): asserts value is T {\n  if (value == null) throw new Error('Value is null or undefined');\n}\n\nfunction process(name: string | null) {\n  assertDefined(name);\n  // What is name's type here?\n  console.log(name.toUpperCase());\n}",
+    "options": [
+      "string — the assertion narrows out null",
+      "string | null — assertions don't affect types",
+      "never — an assertion throws",
+      "unknown"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The 'asserts value is T' return type tells TypeScript that if the function returns normally (doesn't throw), the argument is narrowed. After assertDefined(name), TypeScript knows name is string (null is eliminated)."
+  },
+  {
+    "id": "q77",
+    "category": "TypeScript",
+    "tag": "type guards",
+    "type": "multiple-choice",
+    "question": "What is the difference between 'value is Type' and 'asserts value is Type'?",
+    "options": [
+      "'value is Type' returns boolean and narrows on true; 'asserts' narrows by throwing on false",
+      "They are identical — just different syntax",
+      "'value is Type' is for primitives; 'asserts' is for objects",
+      "'asserts' is runtime-only; 'value is Type' is compile-time-only"
+    ],
+    "correctAnswer": 0,
+    "explanation": "A type predicate (value is Type) returns a boolean — TypeScript narrows the type in the true branch. An assertion function (asserts value is Type) throws on failure — TypeScript narrows the type for all code after the call. Use predicates in if conditions, assertions for guard-and-continue patterns."
+  },
+  {
+    "id": "q78",
+    "category": "TypeScript",
+    "tag": "mapped types",
+    "type": "predict-output",
+    "question": "What type does TReadonlyUser resolve to?",
+    "code": "type TUser = {\n  name: string;\n  age: number;\n};\n\ntype TReadonlyUser = { readonly [K in keyof TUser]: TUser[K] };",
+    "options": [
+      "{ readonly name: string; readonly age: number }",
+      "{ name: string; age: number }",
+      "{ name: readonly string; age: readonly number }",
+      "Compile error"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The mapped type iterates over each key K of TUser and adds the readonly modifier. The value types remain unchanged. This is equivalent to Readonly<TUser>."
+  },
+  {
+    "id": "q79",
+    "category": "TypeScript",
+    "tag": "mapped types",
+    "type": "predict-output",
+    "question": "What type does TNullable resolve to?",
+    "code": "type TUser = {\n  name: string;\n  age: number;\n  active: boolean;\n};\n\ntype TNullable<T> = { [K in keyof T]: T[K] | null };",
+    "options": [
+      "{ name: string | null; age: number | null; active: boolean | null }",
+      "{ name: null; age: null; active: null }",
+      "TUser | null",
+      "Compile error — can't union in mapped types"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The mapped type iterates over each key and unions the original value type with null. Each property becomes its original type OR null. This is a common pattern for form state where fields can be empty."
+  },
+  {
+    "id": "q80",
+    "category": "TypeScript",
+    "tag": "mapped types",
+    "type": "multiple-choice",
+    "question": "What does the -? modifier do in a mapped type?",
+    "code": "type TRequired<T> = { [K in keyof T]-?: T[K] };",
+    "options": [
+      "Removes the optional (?) modifier — making all properties required",
+      "Removes the readonly modifier",
+      "Makes all properties optional",
+      "Removes null from each property type"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The -? modifier removes optionality from properties. [K in keyof T]-?: T[K] makes every property required, which is exactly how the built-in Required<T> utility type works."
+  },
+  {
+    "id": "q81",
+    "category": "TypeScript",
+    "tag": "mapped types",
+    "type": "predict-output",
+    "question": "What type does TGetters resolve to?",
+    "code": "type TUser = { name: string; age: number };\n\ntype TGetters<T> = {\n  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K]\n};",
+    "options": [
+      "{ getName: () => string; getAge: () => number }",
+      "{ getname: () => string; getage: () => number }",
+      "{ get_name: () => string; get_age: () => number }",
+      "Compile error — can't remap keys"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The 'as' clause remaps keys in a mapped type. Capitalize uppercases the first letter of the key, and the template literal prepends 'get'. So name becomes getName and age becomes getAge, each returning their original type."
+  },
+  {
+    "id": "q82",
+    "category": "TypeScript",
+    "tag": "conditional types",
+    "type": "predict-output",
+    "question": "What type does result resolve to?",
+    "code": "type TIsString<T> = T extends string ? 'yes' : 'no';\n\ntype A = TIsString<string>;\ntype B = TIsString<number>;\ntype C = TIsString<'hello'>;",
+    "options": [
+      "A = 'yes', B = 'no', C = 'yes'",
+      "A = 'yes', B = 'no', C = 'no'",
+      "A = 'yes', B = 'yes', C = 'yes'",
+      "All are boolean"
+    ],
+    "correctAnswer": 0,
+    "explanation": "T extends string checks if T is assignable to string. string extends string is true ('yes'). number doesn't extend string ('no'). 'hello' is a string literal which extends string ('yes')."
+  },
+  {
+    "id": "q83",
+    "category": "TypeScript",
+    "tag": "conditional types",
+    "type": "predict-output",
+    "question": "What type does result resolve to?",
+    "code": "type TFlatten<T> = T extends Array<infer U> ? U : T;\n\ntype A = TFlatten<string[]>;\ntype B = TFlatten<number>;\ntype C = TFlatten<(string | number)[]>;",
+    "options": [
+      "A = string, B = number, C = string | number",
+      "A = string[], B = number, C = (string | number)[]",
+      "A = string, B = never, C = string | number",
+      "Compile error — infer is not valid here"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The infer keyword extracts the element type from an array. string[] matches Array<infer U> with U=string. number doesn't match the array pattern, so the else branch returns T (number). (string | number)[] infers U as string | number."
+  },
+  {
+    "id": "q84",
+    "category": "TypeScript",
+    "tag": "conditional types",
+    "type": "predict-output",
+    "question": "What type does result resolve to?",
+    "code": "type TExcludeStrings<T> = T extends string ? never : T;\n\ntype Result = TExcludeStrings<string | number | boolean>;",
+    "options": [
+      "number | boolean",
+      "string | number | boolean",
+      "never",
+      "string"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Conditional types distribute over unions. Each member is checked independently: string extends string → never, number extends string → number, boolean extends string → boolean. The results union together: never | number | boolean simplifies to number | boolean. This is how the built-in Exclude utility type works."
   }
 ]
