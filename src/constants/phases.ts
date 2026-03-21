@@ -3,7 +3,8 @@ export const PHASES = [
   { name: 'React', category: 'React', progress: '40/40', color: 'bg-emerald-500' },
   { name: 'TypeScript', category: 'TypeScript', progress: '24/24', color: 'bg-amber-500' },
   { name: 'Patterns', category: 'Patterns', progress: '16/16', color: 'bg-red-500' },
-  { name: 'HTML/CSS & SQL', category: 'HTML/CSS & SQL', progress: '12/12', color: 'bg-blue-500' }
+  { name: 'HTML/CSS & SQL', category: 'HTML/CSS & SQL', progress: '12/12', color: 'bg-blue-500' },
+  { name: 'Node.js & Express', category: 'Node.js & Express', progress: '16/16', color: 'bg-orange-500' }
 ]
 
 export const PHASE_TITLES: Record<string, string> = {
@@ -11,5 +12,6 @@ export const PHASE_TITLES: Record<string, string> = {
   'React': 'React core mechanics',
   'TypeScript': 'TypeScript deep dive',
   'Patterns': 'Design patterns',
-  'HTML/CSS & SQL': 'HTML, CSS & SQL fundamentals'
+  'HTML/CSS & SQL': 'HTML, CSS & SQL fundamentals',
+  'Node.js & Express': 'Node.js & Express fundamentals'
 }

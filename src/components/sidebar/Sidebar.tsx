@@ -36,7 +36,7 @@ export const Sidebar = ({ currentPhase, currentMode = 'Quiz', onPhaseSelect }: T
         >
           <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
           All phases
-          <span className="ml-auto text-xs text-gray-500">112</span>
+          <span className="ml-auto text-xs text-gray-500">128</span>
         </div>
         {PHASES.map((phase) => (
           <div
