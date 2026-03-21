@@ -69,6 +69,11 @@ export const useFilteredQuiz = (
   const clampedIndex = Math.min(questionIndex, Math.max(0, questions.length - 1))
   const currentQuestion = questions[clampedIndex]
 
+  const prevQuestion = useCallback(() => {
+    const prevIndex = clampedIndex - 1
+    if (prevIndex >= 0) onQuestionChange(prevIndex)
+  }, [clampedIndex, onQuestionChange])
+
   const nextQuestion = useCallback(() => {
     const nextIndex = clampedIndex + 1
     if (nextIndex < questions.length) onQuestionChange(nextIndex)
@@ -91,6 +96,7 @@ export const useFilteredQuiz = (
     questions,
     currentQuestion,
     currentIndex: clampedIndex,
+    prevQuestion,
     nextQuestion,
     toggleMarkForReview,
     totalQuestions: questions.length,

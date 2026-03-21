@@ -16,6 +16,7 @@ type TProps = {
   showXRay: boolean
   isMarkedForReview: boolean
   onAnswerSelect: (index: number) => void
+  onPrev?: () => void
   onNext: () => void
   onToggleXRay: () => void
   onToggleMarkForReview: () => void
@@ -28,6 +29,7 @@ export const QuestionCard = ({
   showXRay,
   isMarkedForReview,
   onAnswerSelect,
+  onPrev,
   onNext,
   onToggleXRay,
   onToggleMarkForReview
@@ -96,6 +98,14 @@ export const QuestionCard = ({
       )}
 
       <div className="flex items-center gap-2">
+        {onPrev && (
+          <button
+            onClick={onPrev}
+            className="text-xs px-3.5 py-1.5 rounded-md border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
+            &larr; Back
+          </button>
+        )}
         <button
           onClick={onToggleMarkForReview}
           className={`text-xs px-3.5 py-1.5 rounded-md border transition-colors ${

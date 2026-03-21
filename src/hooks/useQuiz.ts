@@ -82,6 +82,11 @@ export const useQuiz = (
     })
   }, [questions])
 
+  const prevQuestion = useCallback(() => {
+    const prevIndex = quizState.currentQuestion - 1
+    if (prevIndex >= 0) onQuestionChange(prevIndex)
+  }, [quizState.currentQuestion, onQuestionChange])
+
   const nextQuestion = useCallback(() => {
     const nextIndex = quizState.currentQuestion + 1
     const hasMore = nextIndex < questions.length
@@ -126,6 +131,7 @@ export const useQuiz = (
     quizState,
     currentQuestion,
     selectAnswer,
+    prevQuestion,
     nextQuestion,
     toggleMarkForReview,
     toggleXRay,

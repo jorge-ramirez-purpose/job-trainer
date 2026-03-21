@@ -18,7 +18,7 @@ export const MarkedPage = () => {
     navigate(`/marked/${newIndex + 1}`, { replace: true })
   }, [navigate])
 
-  const { currentQuestion, currentIndex, nextQuestion, toggleMarkForReview, totalQuestions, loading, error, progress } = useFilteredQuiz(isMarkedForReview, questionIndex, onQuestionChange)
+  const { currentQuestion, currentIndex, prevQuestion, nextQuestion, toggleMarkForReview, totalQuestions, loading, error, progress } = useFilteredQuiz(isMarkedForReview, questionIndex, onQuestionChange)
 
   if (loading) {
     return (
@@ -61,6 +61,7 @@ export const MarkedPage = () => {
           showXRay={false}
           isMarkedForReview={true}
           onAnswerSelect={() => {}}
+          onPrev={prevQuestion}
           onNext={nextQuestion}
           onToggleXRay={() => {}}
           onToggleMarkForReview={toggleMarkForReview}

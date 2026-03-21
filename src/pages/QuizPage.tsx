@@ -17,7 +17,7 @@ export const QuizPage = () => {
     navigate(`/quiz/${phaseSlug}/${newIndex + 1}`, { replace: true })
   }
 
-  const { quizState, currentQuestion, selectAnswer, nextQuestion, toggleMarkForReview, toggleXRay, stats, totalQuestions, loading, error } = useQuiz(category, questionIndex, onQuestionChange)
+  const { quizState, currentQuestion, selectAnswer, prevQuestion, nextQuestion, toggleMarkForReview, toggleXRay, stats, totalQuestions, loading, error } = useQuiz(category, questionIndex, onQuestionChange)
 
   if (!isValidSlug) {
     return <Navigate to="/quiz/all/1" replace />
@@ -72,6 +72,7 @@ export const QuizPage = () => {
           showXRay={quizState.showXRay}
           isMarkedForReview={quizState.markedForReview.includes(currentQuestion.id)}
           onAnswerSelect={selectAnswer}
+          onPrev={prevQuestion}
           onNext={nextQuestion}
           onToggleXRay={toggleXRay}
           onToggleMarkForReview={toggleMarkForReview}

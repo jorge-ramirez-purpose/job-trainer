@@ -19,7 +19,7 @@ export const ReviewPage = () => {
     navigate(`/review/${newIndex + 1}`, { replace: true })
   }, [navigate])
 
-  const { currentQuestion, currentIndex, nextQuestion, toggleMarkForReview, totalQuestions, loading, error, progress } = useFilteredQuiz(isWrongAnswer, questionIndex, onQuestionChange)
+  const { currentQuestion, currentIndex, prevQuestion, nextQuestion, toggleMarkForReview, totalQuestions, loading, error, progress } = useFilteredQuiz(isWrongAnswer, questionIndex, onQuestionChange)
 
   if (loading) {
     return (
@@ -62,6 +62,7 @@ export const ReviewPage = () => {
           showXRay={false}
           isMarkedForReview={progress.markedForReview.includes(currentQuestion.id)}
           onAnswerSelect={() => {}}
+          onPrev={prevQuestion}
           onNext={nextQuestion}
           onToggleXRay={() => {}}
           onToggleMarkForReview={toggleMarkForReview}
