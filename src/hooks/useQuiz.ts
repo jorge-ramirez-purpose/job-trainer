@@ -9,7 +9,7 @@ export const useQuiz = () => {
   const [quizState, setQuizState] = useState<TQuizState>({
     currentQuestion: 0,
     answers: {},
-    markedForReview: new Set(),
+    markedForReview: [],
     showExplanation: false,
     selectedAnswer: null,
     showXRay: false
@@ -82,13 +82,11 @@ export const useQuiz = () => {
   const toggleMarkForReview = () => {
     if (!currentQuestion) return
     setQuizState(prev => {
-      const next = new Set(prev.markedForReview)
-      if (next.has(currentQuestion.id)) {
-        next.delete(currentQuestion.id)
-      } else {
-        next.add(currentQuestion.id)
-      }
-      return { ...prev, markedForReview: next }
+      const isMarked = prev.markedForReview.includes(currentQuestion.id)
+      const markedForReview = isMarked
+        ? prev.markedForReview.filter(id => id !== currentQuestion.id)
+        : [...prev.markedForReview, currentQuestion.id]
+      return { ...prev, markedForReview }
     })
   }
 

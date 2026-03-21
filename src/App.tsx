@@ -81,7 +81,7 @@ const App = () => {
             selectedAnswer={quizState.selectedAnswer}
             showExplanation={quizState.showExplanation}
             showXRay={quizState.showXRay}
-            isMarkedForReview={quizState.markedForReview.has(currentQuestion.id)}
+            isMarkedForReview={quizState.markedForReview.includes(currentQuestion.id)}
             onAnswerSelect={selectAnswer}
             onNext={nextQuestion}
             onToggleXRay={toggleXRay}
