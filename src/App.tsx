@@ -25,7 +25,7 @@ const App = () => {
   if (loading) {
     return (
       <div className="flex h-screen text-sm bg-gray-50 dark:bg-gray-900">
-        <Sidebar currentPhase={category} currentMode="Quiz" onPhaseSelect={selectCategory} />
+        <Sidebar currentPhase={category} onPhaseSelect={selectCategory} />
         <div className="flex-1 flex items-center justify-center">
           <p className="text-gray-500 dark:text-gray-400">Loading questions...</p>
         </div>
@@ -36,7 +36,7 @@ const App = () => {
   if (error) {
     return (
       <div className="flex h-screen text-sm bg-gray-50 dark:bg-gray-900">
-        <Sidebar currentPhase={category} currentMode="Quiz" onPhaseSelect={selectCategory} />
+        <Sidebar currentPhase={category} onPhaseSelect={selectCategory} />
         <div className="flex-1 flex items-center justify-center">
           <p className="text-red-500">Error: {error}</p>
         </div>
@@ -47,7 +47,7 @@ const App = () => {
   if (!currentQuestion) {
     return (
       <div className="flex h-screen text-sm bg-gray-50 dark:bg-gray-900">
-        <Sidebar currentPhase={category} currentMode="Quiz" onPhaseSelect={selectCategory} />
+        <Sidebar currentPhase={category} onPhaseSelect={selectCategory} />
         <div className="flex-1 flex items-center justify-center">
           <p className="text-gray-500 dark:text-gray-400">No questions available.</p>
         </div>
@@ -57,7 +57,7 @@ const App = () => {
 
   return (
     <div className="flex h-screen text-sm bg-gray-50 dark:bg-gray-900">
-      <Sidebar currentPhase={category} currentMode="Quiz" onPhaseSelect={selectCategory} />
+      <Sidebar currentPhase={category} onPhaseSelect={selectCategory} />
 
       <div className="flex-1 flex flex-col">
         <TopBar

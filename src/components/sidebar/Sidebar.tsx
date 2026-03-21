@@ -2,17 +2,10 @@ import { PHASES } from '../../constants/phases'
 
 type TProps = {
   currentPhase: string | null
-  currentMode: string
   onPhaseSelect: (phase: string | null) => void
 }
 
-export const Sidebar = ({ currentPhase, currentMode = 'Quiz', onPhaseSelect }: TProps) => {
-  const modes = [
-    { name: 'Quiz', active: currentMode === 'Quiz' },
-    { name: 'Flashcards', active: currentMode === 'Flashcards' },
-    { name: 'Review wrongs', active: false }
-  ]
-
+export const Sidebar = ({ currentPhase, onPhaseSelect }: TProps) => {
   return (
     <div className="w-52 border-r border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 flex-shrink-0 py-3.5">
       <div className="px-3.5 pb-3 text-sm font-medium text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700 mb-2">
@@ -22,7 +15,7 @@ export const Sidebar = ({ currentPhase, currentMode = 'Quiz', onPhaseSelect }: T
         </div>
       </div>
 
-      <div className="px-2 mb-4">
+      <div className="px-2">
         <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider px-1.5 mb-1">
           Phases
         </div>
@@ -53,24 +46,6 @@ export const Sidebar = ({ currentPhase, currentMode = 'Quiz', onPhaseSelect }: T
             <span className="ml-auto text-xs text-gray-500">
               {phase.progress}
             </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="px-2">
-        <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider px-1.5 mb-1">
-          Mode
-        </div>
-        {modes.map((mode) => (
-          <div
-            key={mode.name}
-            className={`px-1.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors ${
-              mode.active
-                ? 'bg-gray-100 text-gray-900 font-medium dark:bg-gray-700 dark:text-gray-100'
-                : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100'
-            }`}
-          >
-            {mode.name}
           </div>
         ))}
       </div>
