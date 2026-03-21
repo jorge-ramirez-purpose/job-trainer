@@ -28,7 +28,7 @@ function App() {
           totalQuestions={totalQuestions}
         />
 
-        <div className="flex-1 p-4 overflow-y-auto">
+        <div className="flex-1 p-4 overflow-y-auto  w-full max-w-[900px] mx-auto">
           <StatsRow 
             correct={stats.correct}
             wrong={stats.wrong}
