@@ -1,8 +1,10 @@
-import { useState } from 'react'
-import { QuizState } from '../types/Question'
-import { questions } from '../data/questions'
+import { useState, useEffect } from 'react'
+import { Question, QuizState } from '../types/Question'
 
 export const useQuiz = () => {
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [quizState, setQuizState] = useState<QuizState>({
     currentQuestion: 0,
     answers: {},
@@ -11,11 +13,27 @@ export const useQuiz = () => {
     showXRay: false
   })
 
+  useEffect(() => {
+    fetch('/api/questions')
+      .then(res => {
+        if (!res.ok) throw new Error(`Failed to fetch questions: ${res.status}`)
+        return res.json()
+      })
+      .then(data => {
+        setQuestions(data)
+        setLoading(false)
+      })
+      .catch(err => {
+        setError(err.message)
+        setLoading(false)
+      })
+  }, [])
+
   const currentQuestion = questions[quizState.currentQuestion]
 
   const selectAnswer = (answerIndex: number) => {
     if (quizState.showExplanation) return
-    
+
     setQuizState(prev => ({
       ...prev,
       selectedAnswer: answerIndex,
@@ -67,6 +85,8 @@ export const useQuiz = () => {
     nextQuestion,
     toggleXRay,
     getStats,
-    totalQuestions: questions.length
+    totalQuestions: questions.length,
+    loading,
+    error
   }
 }
