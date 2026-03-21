@@ -15,4 +15,5 @@ export interface QuizState {
   answers: Record<string, number>;
   showExplanation: boolean;
   selectedAnswer: number | null;
+  showXRay: boolean;
 }

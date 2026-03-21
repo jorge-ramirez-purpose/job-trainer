@@ -7,7 +7,8 @@ export const useQuiz = () => {
     currentQuestion: 0,
     answers: {},
     showExplanation: false,
-    selectedAnswer: null
+    selectedAnswer: null,
+    showXRay: false
   })
 
   const currentQuestion = questions[quizState.currentQuestion]
@@ -32,9 +33,17 @@ export const useQuiz = () => {
         ...prev,
         currentQuestion: prev.currentQuestion + 1,
         showExplanation: false,
-        selectedAnswer: null
+        selectedAnswer: null,
+        showXRay: false
       }))
     }
+  }
+
+  const toggleXRay = () => {
+    setQuizState(prev => ({
+      ...prev,
+      showXRay: !prev.showXRay
+    }))
   }
 
   const getStats = () => {
@@ -56,6 +65,7 @@ export const useQuiz = () => {
     currentQuestion,
     selectAnswer,
     nextQuestion,
+    toggleXRay,
     getStats,
     totalQuestions: questions.length
   }

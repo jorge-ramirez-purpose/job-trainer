@@ -4,12 +4,13 @@ import { TopBar } from './components/quiz/TopBar'
 import { StatsRow } from './components/quiz/StatsRow'
 import { QuestionCard } from './components/quiz/QuestionCard'
 
-function App() {
+const App = () => {
   const {
     quizState,
     currentQuestion,
     selectAnswer,
     nextQuestion,
+    toggleXRay,
     getStats,
     totalQuestions
   } = useQuiz()
@@ -39,8 +40,10 @@ function App() {
             question={currentQuestion}
             selectedAnswer={quizState.selectedAnswer}
             showExplanation={quizState.showExplanation}
+            showXRay={quizState.showXRay}
             onAnswerSelect={selectAnswer}
             onNext={nextQuestion}
+            onToggleXRay={toggleXRay}
           />
         </div>
       </div>
