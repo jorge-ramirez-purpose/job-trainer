@@ -1,17 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 import { TQuestion } from '../shared/types';
 import { createQuestionsRouter } from './routes/questions';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const questions: TQuestion[] = JSON.parse(
-  readFileSync(join(__dirname, 'data', 'questions.json'), 'utf-8')
-);
+import questions from './data/questions.json';
 
 const app = express();
 const PORT = 3001;
@@ -19,7 +10,7 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/questions', createQuestionsRouter(questions));
+app.use('/api/questions', createQuestionsRouter(questions as TQuestion[]));
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
