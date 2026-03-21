@@ -1761,5 +1761,256 @@
     ],
     "correctAnswer": 0,
     "explanation": "Normalization splits data into related tables to eliminate redundancy. Without it, the same data (e.g., a customer's address) is stored in multiple rows and can become inconsistent if one copy is updated but others aren't. The tradeoff: normalized data requires joins, which can be slower for reads."
+  },
+  {
+    "id": "q113",
+    "category": "Node.js & Express",
+    "tag": "middleware",
+    "type": "predict-output",
+    "question": "What is the order of the logs?",
+    "code": "app.use((req, res, next) => {\n  console.log('A');\n  next();\n  console.log('B');\n});\n\napp.use((req, res, next) => {\n  console.log('C');\n  next();\n});\n\napp.get('/', (req, res) => {\n  console.log('D');\n  res.send('OK');\n});",
+    "options": [
+      "A, C, D, B",
+      "A, B, C, D",
+      "A, C, B, D",
+      "D, C, A, B"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Middleware executes top-down. First middleware logs A, calls next() which passes to the second middleware (logs C), which calls next() passing to the route handler (logs D). After the handler returns, execution continues after next() in the first middleware, logging B. Code after next() runs after downstream middleware completes."
+  },
+  {
+    "id": "q114",
+    "category": "Node.js & Express",
+    "tag": "middleware",
+    "type": "multiple-choice",
+    "question": "What is the difference between app.use() and route-specific middleware?",
+    "code": "// Option A\napp.use(logger);\n\n// Option B\napp.get('/users', logger, getUsers);",
+    "options": [
+      "app.use runs on every request; route-specific middleware runs only on matching routes",
+      "app.use is faster; route-specific is slower",
+      "app.use only works with GET; route-specific works with all methods",
+      "There is no difference — they are interchangeable"
+    ],
+    "correctAnswer": 0,
+    "explanation": "app.use() registers middleware that runs on every incoming request (optionally scoped to a path prefix). Route-specific middleware (passed as arguments to app.get, app.post, etc.) only runs when that specific route matches. Use app.use for cross-cutting concerns like logging; use route-specific middleware for auth checks on individual endpoints."
+  },
+  {
+    "id": "q115",
+    "category": "Node.js & Express",
+    "tag": "routing",
+    "type": "predict-output",
+    "question": "What does req.params contain?",
+    "code": "app.get('/users/:userId/posts/:postId', (req, res) => {\n  console.log(req.params);\n  res.send('OK');\n});\n\n// Request: GET /users/42/posts/7",
+    "options": [
+      "{ userId: '42', postId: '7' }",
+      "{ userId: 42, postId: 7 }",
+      "{ id: '42', id: '7' }",
+      "{ 0: '42', 1: '7' }"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Express captures named route parameters (prefixed with :) and stores them as string properties in req.params. The names match the parameter names in the route definition. Note: values are always strings, even if they look like numbers."
+  },
+  {
+    "id": "q116",
+    "category": "Node.js & Express",
+    "tag": "routing",
+    "type": "multiple-choice",
+    "question": "What does router.route() allow you to do?",
+    "code": "router.route('/users')\n  .get(getUsers)\n  .post(createUser)\n  .delete(deleteAllUsers);",
+    "options": [
+      "Chain multiple HTTP method handlers for the same path — reduces path duplication",
+      "Create nested routes inside a route",
+      "Define middleware that only applies to this path",
+      "Redirect from one route to another"
+    ],
+    "correctAnswer": 0,
+    "explanation": "router.route(path) returns a chainable route object that lets you attach handlers for different HTTP methods on the same path. This avoids repeating the path string for each method and keeps related endpoints grouped together."
+  },
+  {
+    "id": "q117",
+    "category": "Node.js & Express",
+    "tag": "error handling",
+    "type": "predict-output",
+    "question": "Which middleware catches the error?",
+    "code": "app.get('/', (req, res) => {\n  throw new Error('oops');\n});\n\napp.use((req, res, next) => {\n  console.log('A');\n  next();\n});\n\napp.use((err, req, res, next) => {\n  console.log('B:', err.message);\n  res.status(500).send('Error');\n});",
+    "options": [
+      "B: oops — the 4-argument middleware catches it",
+      "A — regular middleware handles all requests",
+      "Neither — the error crashes the server",
+      "Both A and B run"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Express error-handling middleware has exactly 4 parameters: (err, req, res, next). When a synchronous error is thrown in a route handler, Express skips regular middleware and passes the error to the next error-handling middleware. The 3-argument middleware (A) is skipped because it's not an error handler."
+  },
+  {
+    "id": "q118",
+    "category": "Node.js & Express",
+    "tag": "error handling",
+    "type": "multiple-choice",
+    "question": "How do you properly handle errors in async route handlers?",
+    "code": "app.get('/data', async (req, res) => {\n  const data = await fetchData(); // might throw\n  res.json(data);\n});",
+    "options": [
+      "Wrap in try/catch and call next(err) — Express doesn't catch async rejections automatically",
+      "Express catches async errors automatically — no extra handling needed",
+      "Use res.error() to send the error",
+      "Add a .catch() to the route definition"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Express 4 does not catch rejected promises from async handlers. An unhandled rejection will hang the request or crash the server. You must wrap async handlers in try/catch and call next(err) to forward to your error-handling middleware. Express 5 adds automatic async error handling."
+  },
+  {
+    "id": "q119",
+    "category": "Node.js & Express",
+    "tag": "req/res lifecycle",
+    "type": "predict-output",
+    "question": "What does the client receive?",
+    "code": "app.get('/data', (req, res) => {\n  res.json({ name: 'Alice' });\n});\n\n// What Content-Type header is set?",
+    "options": [
+      "application/json — res.json sets it automatically and stringifies the object",
+      "text/plain — Express sends plain text by default",
+      "text/html — Express defaults to HTML",
+      "No Content-Type is set"
+    ],
+    "correctAnswer": 0,
+    "explanation": "res.json() does three things: sets Content-Type to application/json, calls JSON.stringify on the argument, and sends the response. res.send() with an object also sets JSON content type, but res.json() is explicit and preferred for API responses."
+  },
+  {
+    "id": "q120",
+    "category": "Node.js & Express",
+    "tag": "req/res lifecycle",
+    "type": "multiple-choice",
+    "question": "What happens when you call res.send() twice in the same handler?",
+    "code": "app.get('/', (req, res) => {\n  res.send('first');\n  res.send('second');\n});",
+    "options": [
+      "Client receives 'first', server logs 'Cannot set headers after they are sent'",
+      "Client receives 'firstsecond'",
+      "Client receives 'second' — it overwrites the first",
+      "Express throws a synchronous error"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The first res.send() sends the response and marks it as finished. The second call tries to write headers to an already-sent response, causing a 'Cannot set headers after they are sent to the client' error. Code after res.send() still executes — use return res.send() to stop execution."
+  },
+  {
+    "id": "q121",
+    "category": "Node.js & Express",
+    "tag": "async patterns",
+    "type": "predict-output",
+    "question": "What does the client receive?",
+    "code": "function delay(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\napp.get('/slow', async (req, res) => {\n  await delay(1000);\n  res.json({ status: 'done' });\n});\n\napp.get('/fast', (req, res) => {\n  res.json({ status: 'instant' });\n});\n\n// Client requests GET /slow, then immediately GET /fast",
+    "options": [
+      "/fast responds first with { status: 'instant' }, /slow responds 1s later",
+      "/slow responds first because it was requested first",
+      "/fast waits for /slow to finish",
+      "Both respond at the same time after 1s"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Node.js is non-blocking. The /slow handler awaits a 1-second delay but doesn't block the event loop. The /fast request is handled immediately while /slow's timer is pending. Each request is independent — async handlers don't block other incoming requests."
+  },
+  {
+    "id": "q122",
+    "category": "Node.js & Express",
+    "tag": "async patterns",
+    "type": "multiple-choice",
+    "question": "What happens if an async handler rejects and there's no try/catch?",
+    "code": "app.get('/broken', async (req, res) => {\n  const data = await failingFunction();\n  res.json(data);\n});\n\n// No error-handling middleware registered",
+    "options": [
+      "The request hangs until timeout — the rejection is silently swallowed",
+      "Express returns a 500 automatically",
+      "The server crashes immediately",
+      "Express retries the request"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In Express 4, unhandled promise rejections from async handlers are not caught by Express. The response is never sent, so the client waits until the connection times out. Node.js may also log an UnhandledPromiseRejection warning. Always wrap async handlers in try/catch."
+  },
+  {
+    "id": "q123",
+    "category": "Node.js & Express",
+    "tag": "REST design",
+    "type": "multiple-choice",
+    "question": "Which HTTP methods correctly match these CRUD operations?",
+    "options": [
+      "Create: POST, Read: GET, Update: PUT/PATCH, Delete: DELETE",
+      "Create: PUT, Read: GET, Update: POST, Delete: DELETE",
+      "Create: GET, Read: POST, Update: PUT, Delete: PATCH",
+      "Create: POST, Read: GET, Update: DELETE, Delete: PUT"
+    ],
+    "correctAnswer": 0,
+    "explanation": "REST convention maps CRUD to HTTP methods: POST creates a new resource, GET reads without side effects, PUT replaces a resource entirely (or PATCH for partial updates), and DELETE removes a resource. GET and DELETE should be idempotent."
+  },
+  {
+    "id": "q124",
+    "category": "Node.js & Express",
+    "tag": "REST design",
+    "type": "multiple-choice",
+    "question": "What is the key difference between PUT and POST?",
+    "options": [
+      "PUT is idempotent (same request = same result); POST is not (can create duplicates)",
+      "PUT is for creating; POST is for updating",
+      "PUT sends JSON; POST sends form data",
+      "PUT is faster; POST is more secure"
+    ],
+    "correctAnswer": 0,
+    "explanation": "PUT is idempotent — calling PUT /users/42 with the same body always produces the same result regardless of how many times you call it. POST /users creates a new resource each time. PUT replaces the entire resource at a known URI; POST lets the server decide the URI."
+  },
+  {
+    "id": "q125",
+    "category": "Node.js & Express",
+    "tag": "environment & config",
+    "type": "predict-output",
+    "question": "What does this code log?",
+    "code": "// .env file: PORT=4000\nrequire('dotenv').config();\n\nconst port = process.env.PORT || 3000;\nconsole.log(typeof port, port);",
+    "options": [
+      "\"string\", \"4000\"",
+      "\"number\", 4000",
+      "\"string\", \"3000\"",
+      "\"undefined\", undefined"
+    ],
+    "correctAnswer": 0,
+    "explanation": "dotenv loads .env values into process.env as strings. Even though PORT looks like a number, process.env.PORT is the string '4000'. The || fallback doesn't trigger because '4000' is truthy. If you need a number, use parseInt(process.env.PORT, 10)."
+  },
+  {
+    "id": "q126",
+    "category": "Node.js & Express",
+    "tag": "environment & config",
+    "type": "multiple-choice",
+    "question": "Why should .env files never be committed to version control?",
+    "options": [
+      "They contain secrets (API keys, DB passwords) that would be exposed in the repo history",
+      "They are too large and slow down git",
+      "Node.js can't read .env files from a git repo",
+      "Environment variables are set by the OS, not files"
+    ],
+    "correctAnswer": 0,
+    "explanation": ".env files typically contain secrets like database passwords, API keys, and tokens. Committing them exposes these secrets to anyone with repo access, and they persist in git history even if deleted later. Use .env.example (with placeholder values) to document required variables without exposing real secrets."
+  },
+  {
+    "id": "q127",
+    "category": "Node.js & Express",
+    "tag": "security basics",
+    "type": "multiple-choice",
+    "question": "What does CORS (Cross-Origin Resource Sharing) control?",
+    "options": [
+      "Which external domains can make requests to your API from a browser",
+      "Which users can log into your application",
+      "How data is encrypted in transit",
+      "Which HTTP methods are allowed on the server"
+    ],
+    "correctAnswer": 0,
+    "explanation": "CORS is a browser security mechanism. By default, browsers block requests from one origin (domain) to another. The CORS middleware sends headers (Access-Control-Allow-Origin, etc.) that tell the browser which external origins are permitted. CORS only affects browsers — server-to-server requests bypass it entirely."
+  },
+  {
+    "id": "q128",
+    "category": "Node.js & Express",
+    "tag": "security basics",
+    "type": "multiple-choice",
+    "question": "What does rate limiting protect against?",
+    "options": [
+      "Abuse and DoS — limits how many requests a client can make in a time window",
+      "SQL injection — limits the size of query parameters",
+      "XSS — limits the type of content in responses",
+      "CSRF — limits which forms can submit to the server"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Rate limiting restricts the number of requests a client (usually identified by IP) can make within a time window (e.g., 100 requests per 15 minutes). It protects against brute-force attacks, API abuse, and denial-of-service. Libraries like express-rate-limit make this straightforward to implement."
   }
 ]
