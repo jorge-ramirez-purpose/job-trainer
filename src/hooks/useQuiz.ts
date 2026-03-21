@@ -1,19 +1,49 @@
 import { useState, useEffect, useCallback } from 'react'
 import { TQuestion, TQuizState } from '../types/Question'
 
+const STORAGE_KEY = 'quiz-progress'
+
+type TPersistedProgress = {
+  answers: Record<string, number>
+  markedForReview: string[]
+}
+
+const loadProgress = (): TPersistedProgress => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return { answers: {}, markedForReview: [] }
+    return JSON.parse(raw)
+  } catch {
+    return { answers: {}, markedForReview: [] }
+  }
+}
+
+const saveProgress = (progress: TPersistedProgress) => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress))
+}
+
 export const useQuiz = () => {
   const [questions, setQuestions] = useState<TQuestion[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [category, setCategory] = useState<string | null>(null)
+
+  const persisted = loadProgress()
   const [quizState, setQuizState] = useState<TQuizState>({
     currentQuestion: 0,
-    answers: {},
-    markedForReview: [],
+    answers: persisted.answers,
+    markedForReview: persisted.markedForReview,
     showExplanation: false,
     selectedAnswer: null,
     showXRay: false
   })
+
+  useEffect(() => {
+    saveProgress({
+      answers: quizState.answers,
+      markedForReview: quizState.markedForReview
+    })
+  }, [quizState.answers, quizState.markedForReview])
 
   useEffect(() => {
     const controller = new AbortController()
