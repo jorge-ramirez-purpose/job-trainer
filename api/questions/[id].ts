@@ -1,6 +1,22 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import type { TQuestion } from '../../shared/types'
-import questions from '../../server/data/questions.json'
+import { readFileSync } from 'fs'
+import { join } from 'path'
+
+type TQuestion = {
+  id: string
+  category: string
+  tag: string
+  type: string
+  question: string
+  code?: string
+  options: string[]
+  correctAnswer: number
+  explanation: string
+}
+
+const questions: TQuestion[] = JSON.parse(
+  readFileSync(join(__dirname, '..', '..', 'server', 'data', 'questions.json'), 'utf-8')
+)
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query
@@ -10,7 +26,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const question = (questions as TQuestion[]).find((q) => q.id === id)
+  const question = questions.find((q) => q.id === id)
 
   if (!question) {
     res.status(404).json({ error: 'Question not found' })
