@@ -15,7 +15,7 @@ type TQuestion = {
 }
 
 const questions: TQuestion[] = JSON.parse(
-  readFileSync(join(__dirname, '..', 'server', 'data', 'questions.json'), 'utf-8')
+  readFileSync(join(process.cwd(), 'server', 'data', 'questions.json'), 'utf-8')
 )
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
