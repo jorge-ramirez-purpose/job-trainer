@@ -2012,5 +2012,37 @@
     ],
     "correctAnswer": 0,
     "explanation": "Rate limiting restricts the number of requests a client (usually identified by IP) can make within a time window (e.g., 100 requests per 15 minutes). It protects against brute-force attacks, API abuse, and denial-of-service. Libraries like express-rate-limit make this straightforward to implement."
+  },
+  {
+    "id": "q129",
+    "category": "JavaScript",
+    "tag": "coercion",
+    "type": "predict-output",
+    "question": "What does this function return?",
+    "code": "function add(a, b) {\n  return a + b;\n}\n\nconsole.log(add('5', 3));",
+    "options": [
+      "\"53\"",
+      "8",
+      "\"8\"",
+      "NaN"
+    ],
+    "correctAnswer": 0,
+    "explanation": "When one operand of + is a string, JavaScript coerces the other to a string and concatenates. '5' + 3 becomes '5' + '3' = '53'. The function has no type checking — it trusts its inputs. In TypeScript, typing the parameters as (a: number, b: number) would catch this at compile time."
+  },
+  {
+    "id": "q130",
+    "category": "JavaScript",
+    "tag": "array methods",
+    "type": "predict-output",
+    "question": "What does result contain?",
+    "code": "const numbers = [1, 2, 3, 4];\n\nconst result = numbers.map(n => {\n  n * 2;\n});\n\nconsole.log(result);",
+    "options": [
+      "[undefined, undefined, undefined, undefined]",
+      "[2, 4, 6, 8]",
+      "[]",
+      "[1, 2, 3, 4]"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The arrow function uses curly braces (block body) but has no return statement. { n * 2; } evaluates the expression but discards the result — the function implicitly returns undefined. Fix: either add return (=> { return n * 2; }) or remove the braces for a concise body (=> n * 2)."
   }
 ]

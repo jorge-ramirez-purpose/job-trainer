@@ -1,5 +1,5 @@
 export const PHASES = [
-  { name: 'JS core', category: 'JavaScript', slug: 'javascript', progress: '20/20', color: 'bg-purple-500' },
+  { name: 'JS core', category: 'JavaScript', slug: 'javascript', progress: '22/22', color: 'bg-purple-500' },
   { name: 'React', category: 'React', slug: 'react', progress: '40/40', color: 'bg-emerald-500' },
   { name: 'TypeScript', category: 'TypeScript', slug: 'typescript', progress: '24/24', color: 'bg-amber-500' },
   { name: 'Patterns', category: 'Patterns', slug: 'patterns', progress: '16/16', color: 'bg-red-500' },

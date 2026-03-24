@@ -14,6 +14,14 @@ Current questions test knowledge of APIs and language mechanics. Real interviews
 - **New phase vs mixed in?** These questions span multiple domains (React + networking, performance + data structures). A dedicated "Scenarios" or "System Design" phase keeps them together. Alternatively, tag them by primary domain and distribute across existing phases.
 - **Difficulty level** — Consider adding a `difficulty` field to TQuestion (`'easy' | 'medium' | 'hard'`). Scenario questions are inherently harder and could be filtered separately.
 
+### Already added to the quiz
+
+These came from real interviews and have been added as questions:
+
+- **q129** — String + number coercion: `add('5', 3)` returns `"53"` (JS coercion tag)
+- **q130** — Map without return: `numbers.map(n => { n * 2; })` returns `[undefined, ...]` (JS array methods tag)
+- **Skipped** — URL syntax and validation question (too complex to frame as multiple-choice)
+
 ### Collected interview questions
 
 #### 1. Offline-first audio transcription
