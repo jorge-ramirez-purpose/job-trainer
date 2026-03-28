@@ -2,6 +2,12 @@
 
 A React + TypeScript + Vite quiz app for frontend interview preparation, backed by a Node.js Express API.
 
+## Link
+https://job-trainer.vercel.app
+
+## Screenshot
+<img width="1469" height="804" alt="Screenshot 2026-03-28 at 22 39 02" src="https://github.com/user-attachments/assets/dc256406-d05c-47a2-b648-fbd2c826e254" />
+
 ## Features
 
 - **Quiz Mode**: 128 interactive questions with predict-output and multiple-choice formats
