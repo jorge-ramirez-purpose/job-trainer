@@ -39,7 +39,7 @@ export const Sidebar = ({ currentPhase, onPhaseSelect }: TProps) => {
         >
           <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
           All phases
-          <span className="ml-auto text-xs text-gray-500">130</span>
+          <span className="ml-auto text-xs text-gray-500">134</span>
         </div>
         {PHASES.map((phase) => (
           <div

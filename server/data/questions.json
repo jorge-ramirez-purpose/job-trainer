@@ -2044,5 +2044,66 @@
     ],
     "correctAnswer": 0,
     "explanation": "The arrow function uses curly braces (block body) but has no return statement. { n * 2; } evaluates the expression but discards the result — the function implicitly returns undefined. Fix: either add return (=> { return n * 2; }) or remove the braces for a concise body (=> n * 2)."
+  },
+  {
+    "id": "q131",
+    "category": "TypeScript",
+    "tag": "any & unknown",
+    "type": "multiple-choice",
+    "question": "What is the key difference between `any` and `unknown` in TypeScript?",
+    "options": [
+      "`unknown` requires a type check before use; `any` disables type checking entirely",
+      "`any` is stricter than `unknown` — it rejects more values",
+      "`unknown` can only hold primitive values like string or number",
+      "There is no difference — they are interchangeable aliases"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Both `any` and `unknown` accept any value. The difference is what you can do with them. `any` turns off type checking — you can call methods, access properties, and assign it anywhere with no errors. `unknown` forces you to narrow the type first (via typeof, instanceof, or a type guard) before TypeScript lets you use the value. `unknown` is the type-safe counterpart to `any`: it still describes 'I don't know the type' but doesn't let you pretend you do."
+  },
+  {
+    "id": "q132",
+    "category": "TypeScript",
+    "tag": "generics",
+    "type": "predict-output",
+    "question": "What is the inferred type of `result`?",
+    "code": "function first<T>(arr: T[]): T | undefined {\n  return arr[0]\n}\n\nconst result = first([1, 2, 3])",
+    "options": [
+      "number | undefined",
+      "T | undefined",
+      "any",
+      "unknown"
+    ],
+    "correctAnswer": 0,
+    "explanation": "TypeScript infers the generic type parameter T from the argument. When you call first([1, 2, 3]), TypeScript sees an array of numbers and infers T = number. The return type T | undefined becomes number | undefined. Generics let you write reusable code without losing type information — the alternative of using any[] would return any, discarding the type."
+  },
+  {
+    "id": "q133",
+    "category": "TypeScript",
+    "tag": "type declarations",
+    "type": "multiple-choice",
+    "question": "What is a key difference between `interface` and `type` in TypeScript?",
+    "options": [
+      "`interface` supports declaration merging; `type` cannot be redeclared",
+      "`type` only works with primitive values; `interface` handles objects",
+      "`interface` supports generics; `type` does not",
+      "They are completely identical — just two syntaxes for the same thing"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Both can describe object shapes, support generics, and be extended/intersected. The main distinction is declaration merging: declaring the same `interface` twice causes TypeScript to merge the definitions (useful for augmenting third-party types). `type` aliases cannot be redeclared — you'll get an error. `type` is more expressive: it can represent unions, intersections, mapped types, and conditional types directly, while `interface` is limited to object shapes. Most modern style guides prefer `type` for its flexibility."
+  },
+  {
+    "id": "q134",
+    "category": "React",
+    "tag": "Suspense & lazy loading",
+    "type": "multiple-choice",
+    "question": "What does React Suspense allow you to do?",
+    "options": [
+      "Declaratively show a fallback UI while a component or data is loading",
+      "Pause JavaScript execution until an API call resolves",
+      "Prevent re-renders while async operations are in flight",
+      "Wrap async functions so they return synchronously"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Suspense is a React component that accepts a `fallback` prop — a UI to show while children aren't ready yet. It works with React.lazy() for code-split components, and with data libraries that implement the Suspense protocol. When a child 'suspends' (signals it's not ready), React walks up to the nearest Suspense boundary and renders the fallback instead. This replaces manual isLoading state scattered through components with a single declarative boundary."
   }
 ]

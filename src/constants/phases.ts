@@ -1,7 +1,7 @@
 export const PHASES = [
-  { name: 'JS core', category: 'JavaScript', slug: 'javascript', progress: '22/22', color: 'bg-purple-500' },
-  { name: 'React', category: 'React', slug: 'react', progress: '40/40', color: 'bg-emerald-500' },
-  { name: 'TypeScript', category: 'TypeScript', slug: 'typescript', progress: '24/24', color: 'bg-amber-500' },
+  { name: 'JS core', category: 'JavaScript', slug: 'javascript', progress: '21/21', color: 'bg-purple-500' },
+  { name: 'React', category: 'React', slug: 'react', progress: '42/42', color: 'bg-emerald-500' },
+  { name: 'TypeScript', category: 'TypeScript', slug: 'typescript', progress: '27/27', color: 'bg-amber-500' },
   { name: 'Patterns', category: 'Patterns', slug: 'patterns', progress: '16/16', color: 'bg-red-500' },
   { name: 'HTML/CSS & SQL', category: 'HTML/CSS & SQL', slug: 'html-css-sql', progress: '12/12', color: 'bg-blue-500' },
   { name: 'Node.js & Express', category: 'Node.js & Express', slug: 'nodejs-express', progress: '16/16', color: 'bg-orange-500' }
