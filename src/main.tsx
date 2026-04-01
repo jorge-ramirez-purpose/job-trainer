@@ -5,6 +5,7 @@ import App from './App.tsx'
 import { QuizPage } from './pages/QuizPage.tsx'
 import { ReviewPage } from './pages/ReviewPage.tsx'
 import { MarkedPage } from './pages/MarkedPage.tsx'
+import { QuestionListPage } from './pages/QuestionListPage.tsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -30,6 +31,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         </Route>
         <Route path="/marked/:index" element={<App />}>
           <Route index element={<MarkedPage />} />
+        </Route>
+        <Route path="/questions" element={<Navigate to="/questions/all" replace />} />
+        <Route path="/questions/:phaseSlug" element={<App />}>
+          <Route index element={<QuestionListPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+import { ListBullets } from '@phosphor-icons/react'
 import { PHASES } from '../../constants/phases'
 
 type TProps = {
@@ -12,7 +13,8 @@ export const Sidebar = ({ currentPhase, onPhaseSelect }: TProps) => {
 
   const isReviewActive = location.pathname.startsWith('/review')
   const isMarkedActive = location.pathname.startsWith('/marked')
-  const isQuizActive = !isReviewActive && !isMarkedActive
+  const isListActive = location.pathname.startsWith('/questions')
+  const isQuizActive = !isReviewActive && !isMarkedActive && !isListActive
 
   return (
     <div className="w-52 border-r border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 flex-shrink-0 py-3.5">
@@ -30,7 +32,7 @@ export const Sidebar = ({ currentPhase, onPhaseSelect }: TProps) => {
         <div
           onClick={() => onPhaseSelect(null)}
           className={`flex items-center gap-2 px-1.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors ${
-            isQuizActive && currentPhase === null
+            (isQuizActive || isListActive) && currentPhase === null
               ? 'bg-gray-100 text-gray-900 font-medium dark:bg-gray-700 dark:text-gray-100'
               : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100'
           }`}
@@ -44,7 +46,7 @@ export const Sidebar = ({ currentPhase, onPhaseSelect }: TProps) => {
             key={phase.name}
             onClick={() => onPhaseSelect(phase.category)}
             className={`flex items-center gap-2 px-1.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors ${
-              isQuizActive && currentPhase === phase.category
+              (isQuizActive || isListActive) && currentPhase === phase.category
                 ? 'bg-gray-100 text-gray-900 font-medium dark:bg-gray-700 dark:text-gray-100'
                 : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100'
             }`}
@@ -56,6 +58,23 @@ export const Sidebar = ({ currentPhase, onPhaseSelect }: TProps) => {
             </span>
           </div>
         ))}
+      </div>
+
+      <div className="px-2 mb-4">
+        <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider px-1.5 mb-1">
+          Browse
+        </div>
+        <div
+          onClick={() => navigate('/questions/all')}
+          className={`flex items-center gap-2 px-1.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors ${
+            isListActive
+              ? 'bg-gray-100 text-gray-900 font-medium dark:bg-gray-700 dark:text-gray-100'
+              : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100'
+          }`}
+        >
+          <ListBullets size={12} />
+          Question list
+        </div>
       </div>
 
       <div className="px-2">

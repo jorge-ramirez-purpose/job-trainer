@@ -1,6 +1,7 @@
 import { useMemo, useCallback } from 'react'
-import { useParams, useNavigate, Navigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation, Navigate } from 'react-router-dom'
 import { useQuiz } from '../hooks/useQuiz'
+import { ArrowLeft } from '@phosphor-icons/react'
 import { slugToCategory, PHASE_TITLES } from '../constants/phases'
 import { TopBar } from '../components/quiz/TopBar'
 import { StatsRow } from '../components/quiz/StatsRow'
@@ -9,6 +10,8 @@ import { QuestionCard } from '../components/quiz/QuestionCard'
 export const QuizPage = () => {
   const { phaseSlug = 'all', index } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
+  const fromList = (location.state as { fromList?: string } | null)?.fromList
 
   const category = slugToCategory(phaseSlug)
   const isValidSlug = phaseSlug === 'all' || category !== null
@@ -65,6 +68,15 @@ export const QuizPage = () => {
 
   return (
     <div className="flex-1 flex flex-col">
+      {fromList && (
+        <button
+          onClick={() => navigate(fromList)}
+          className="flex items-center gap-1 px-4 pt-2 text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors self-start"
+        >
+          <ArrowLeft size={12} />
+          Back to list
+        </button>
+      )}
       <TopBar
         title={title}
         tag={currentQuestion.tag}

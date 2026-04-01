@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "prismjs": "^1.30.0",
